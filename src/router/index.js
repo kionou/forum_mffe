@@ -3,6 +3,13 @@ import LayoutPublic from "../views/Public/Loyout.vue"
 import Accueil from "../views/Public/Accueil.vue"
 import Connexion from "../views/Public/Connexion.vue"
 import Inscription from "../views/Public/Inscription.vue"
+import Forum from "../views/Public/Forum.vue"
+import Detail from "../views/Public/Detail.vue"
+import Test from "../views/Public/test.vue"
+
+
+
+
 
 
 
@@ -19,6 +26,16 @@ const router = createRouter({
         { path: '/', name: 'accueil', component: Accueil},
         { path: '/connexion', name: 'Connexion', component: Connexion},
         { path: '/inscription', name: ' Inscription', component:  Inscription},
+        { path: '/forum', name: ' Forum', component:  Forum},
+        { path: '/Detail', name: ' Forum', component:  Detail},
+        { path: '/test', name: ' Test', component:  Test},
+
+
+        
+
+        
+
+
 
        
       ]

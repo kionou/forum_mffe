@@ -82,5 +82,8 @@ font-family: 'Open Sans', sans-serif;
 font-size: 14px;
 
 }
+body p{
+  font-size: var(--paragraphe);
+}
 
 </style>

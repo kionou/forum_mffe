@@ -46,7 +46,7 @@ export default {
 
 .navbar {
   background: var(--blanc);
-  box-shadow: var(--box-shadow);
+  border-bottom: 1px solid #d5e3ec;
 }
 .navbar .navbar-nav .nav-link {
   color: var( --titre-color);

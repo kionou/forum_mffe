@@ -79,7 +79,7 @@
              
               
 
-                <button type="submit" class="btn-gradient" disabled="disabled">S'inscrire</button>
+                <button type="submit" class="btn-gradient">S'inscrire</button>
 
             </form>
 

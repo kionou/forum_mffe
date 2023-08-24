@@ -1,198 +1,135 @@
 <template>
-    <div>
-        <div class="container page-header forum-header">
-    <h1 class="hero-title" style="white-space: nowrap">Forum</h1>
-    <form class="form-group flex forum-search" action="/forum/search">
-  <input type="text" name="q" placeholder="Rechercher un sujet" value="" required="">
-  <button type="submit" class="btn-secondary">Rechercher</button>
-</form>
-  </div>
-  <div class="forum-page bg py3">
-          <div class="forum-page__sidebar stack">
-                <ul class="forum-tags">
+  <div>
+    <div class=" page-header forum-header">
+      <h1 class="hero-title" style="white-space: nowrap">Forum</h1>
+      <form class="form-group flex forum-search" action="/forum/search">
+        <input type="text" name="q" placeholder="Rechercher un sujet" value="" required="">
+        <button type="submit" class="btn-secondary">Rechercher</button>
+      </form>
+    </div>
+    <div class="forum-page bg py3">
+      <div class="forum-page__sidebar stack px-3">
+        <ul class="forum-tags">
           <li>
-            <a href="/forum">
+            <a href="/forum" class="haut">
               Tous les sujets
             </a>
           </li>
-                      <li>
-              <a href="/forum/bases-91">
-                <span style="background-color:#86bb77;"></span>
-                Les bases
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/html-css-4">
-                      HTML/CSS
-                    </a>
-                  </li>
-                                  <li>
-                    <a href="/forum/algorithmique-56">
-                      Algorithmique
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                      <li>
-              <a href="/forum/outils-94">
-                <span style="background-color:#616161;"></span>
-                Outils
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/linux-61">
-                      Linux
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                      <li>
-              <a href="/forum/javascript-7">
-                <span style="background-color:#fdae3f;"></span>
-                Javascript
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/react-95">
-                      React
-                    </a>
-                  </li>
-                                  <li>
-                    <a href="/forum/vuejs-96">
-                      VueJS
-                    </a>
-                  </li>
-                                  <li>
-                    <a href="/forum/nodejs-89">
-                      NodeJS
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                      <li>
-              <a href="/forum/php-5">
-                <span style="background-color:#4c6aa8;"></span>
-                PHP
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/laravel-87">
-                      Laravel
-                    </a>
-                  </li>
-                                  <li>
-                    <a href="/forum/symfony-72">
-                      Symfony
-                    </a>
-                  </li>
-                                  <li>
-                    <a href="/forum/wordpress-9">
-                      Wordpress
-                    </a>
-                  </li>
-                                  <li>
-                    <a href="/forum/codeigniter-54">
-                      CodeIgniter
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                      <li>
-              <a href="/forum/ruby-8">
-                <span style="background-color:#aa1300;"></span>
-                Ruby
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/ruby-on-rails-88">
-                      Ruby On Rails
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                      <li>
-              <a href="/forum/base-donnees-90">
-                <span style="background-color:#000000;"></span>
-                Base de données
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/mysql-6">
-                      MySQL
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                      <li>
-              <a href="/forum/jobs-92">
-                <span style="background-color:#3f88fd;"></span>
-                Jobs
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/offres-d-emploi-79">
-                      Offres d'emploi
-                    </a>
-                  </li>
-                                  <li>
-                    <a href="/forum/formation-60">
-                      Formation
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                      <li>
-              <a href="/forum/divers-93">
-                <span style="background-color:#7a61a8;"></span>
-                Divers
-              </a>
-              <ul>
-                                  <li>
-                    <a href="/forum/jeux-videos-55">
-                      Jeux Vidéos
-                    </a>
-                  </li>
-                              </ul>
-            </li>
-                  </ul>
+          <li>
+            <a href="/forum/bases-91" class="content">
+              Sante
+            </a>
+          </li>
+          <li>
+            <a href="/forum/outils-94" class="content">
+              Outils
+            </a>
+
+          </li>
+          <li>
+            <a href="/forum/javascript-7" class="content">
+              Javascript
+            </a>
+          </li>
+
+        </ul>
       </div>
-        <main class="forum-page__main stack">
-      
-      
-   
-    
-  
-      
+      <main class="forum-page__main stack">
+      <router-link to="/detail">
+        <div class="cadre">
+          <div class="cadre_header">
+            <div class="image">
+              <img src="../../assets/image/about-2.jpg" alt="">
+            </div>
+            <div class="nom">
+              <p>Kionou, <span>il y'a 3jours</span> </p>
+            </div>
+          </div>
+          <div class="cadre_text">
+            <h2>Avoir la durée d'un vidéo</h2>
+          </div>
+          <div class="interet">
+            <p>sante</p>
+          </div>
+          <div class="icon">
+            <i class="bi bi-chat-dots"></i> <span>1</span>
+          </div>
+        </div>
+      </router-link>
+        
+        <div class="cadre">
+          <div class="cadre_header">
+            <div class="image">
+              <img src="../../assets/image/about-2.jpg" alt="">
+            </div>
+            <div class="nom">
+              <p>Kionou, <span>il y'a 3jours</span> </p>
+            </div>
+          </div>
+          <div class="cadre_text">
+            <h2>Avoir la durée d'un vidéo</h2>
+          </div>
+          <div class="interet">
+            <p>sante</p>
+          </div>
+          <div class="icon">
+            <i class="bi bi-chat-dots"></i> <span>1</span>
+          </div>
+        </div>
 
-    </main>
-  </div>
+        <div class="cadre">
+          <div class="cadre_header">
+            <div class="image">
+              <img src="../../assets/image/about-2.jpg" alt="">
+            </div>
+            <div class="nom">
+              <p>Kionou, <span>il y'a 3jours</span> </p>
+            </div>
+          </div>
+          <div class="cadre_text">
+            <h2>Avoir la durée d'un vidéo</h2>
+          </div>
+          <div class="interet">
+            <p>sante</p>
+          </div>
+          <div class="icon">
+            <i class="bi bi-chat-dots"></i> <span>1</span>
+          </div>
+        </div>
 
+
+
+
+
+
+      </main>
     </div>
+
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'ForumMffeForum',
+  name: 'ForumMffeForum',
 
-    data() {
-        return {
-            
-        };
-    },
+  data() {
+    return {
 
-    mounted() {
-        
-    },
+    };
+  },
 
-    methods: {
-        
-    },
+  mounted() {
+
+  },
+
+  methods: {
+
+  },
 };
 </script>
 
 <style lang="css" scoped>
-
-    /* display: grid;
+/* display: grid;
     gap: calc(2 * var(--space));
 }
 .page-header {
@@ -201,184 +138,412 @@ export default {
     padding-bottom: calc(6 * var(--space));
     padding-top: calc(6 * var(--space));
 } */
-@media (min-width: 800px){
-.forum-header {
+@media (min-width: 800px) {
+  .forum-header {
     display: flex;
     align-items: center;
-}
+  }
 }
 
 
 
 .forum-header {
-    display: grid;
-    gap: calc(2 * 8px);
-}
-.page-header {
-    background: var(--blanc);
-    border-bottom: 1px solid #d5e3ec;
-    padding-bottom: calc(6 * 8px);
-    padding-top: calc(6 * 8px);
-}
-.container, .course-top-sidebar, .cursus-section, .footer, .formation-single, .formations, .forum-page, .header, .layout-sidebar, .sections>*, .wave-header {
-    box-sizing: border-box;
-    width: 100%;
-    padding-left: calc(50% - calc(100vw -20px * 2)/ 2);
-    padding-right: calc(50% - calc(100vw - 20px * 2)/ 2);
+  display: grid;
+  gap: calc(2 * 8px);
 }
 
-   
+.page-header {
+  background: var(--blanc);
+  border-bottom: 1px solid #d5e3ec;
+  padding: calc(6 * 8px) 10px ;
+}
+
+.container,
+.course-top-sidebar,
+.cursus-section,
+.footer,
+.formation-single,
+.formations,
+.forum-page,
+.header,
+.layout-sidebar,
+.sections>*,
+.wave-header {
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: calc(50% - calc(100vw -20px * 2)/ 2);
+  padding-right: calc(50% - calc(100vw - 20px * 2)/ 2);
+}
+
+
 
 .forum-header .hero-title {
-    flex: none;
+  flex: none;
 }
-.auth-title, .blog-post__title, .blog-single__title, .course-hero h1, .hero-title, .live-current__title, .page__title {
-    font-size: 52px;
-    font-family: Inter,sans-serif;
-    font-weight: 700;
-    line-height: 1.2;
-     white-space: nowrap;
+
+.auth-title,
+.blog-post__title,
+.blog-single__title,
+.course-hero h1,
+.hero-title,
+.live-current__title,
+.page__title {
+  font-size: 52px;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .forum-search {
-    position: relative;
-}
-body .py3 {
-    padding-top: calc(3 * 8px);
-    padding-bottom: calc(3 * 8px);
+  position: relative;
+  max-width: 1140px;
+    margin: 0 auto;
+    width: 100%;
 }
 
-@media (min-width: 800px){
-    .forum-page {
-    grid-template-columns: 190px 1fr;
+body .py3 {
+  padding-top: calc(3 * 8px);
+  padding-bottom: calc(3 * 8px);
 }
+
+@media (min-width: 800px) {
+  .forum-page {
+    grid-template-columns: 190px 1fr;
+  }
 }
 
 .forum-page {
-    display: grid;
-    gap: calc(3 * 8px);
-    /* grid-template-columns: 1fr; */
-}
-.bg {
-    background: var(--background);
-}
-.flex {
-    display: flex!important;
-    align-items: center;
-    justify-content: space-between;
+  display: grid;
+  gap: calc(3 * 8px);
+  /* grid-template-columns: 1fr; */
 }
 
-.form-group input, .form-group select, .form-group textarea, .ts-dropdown .dropdown-input, .ts-input {
-    border: 1px solid #d5e3ec;
-    background: #f7fafb;
-    border-radius: 3px;
-    color: #121c42;
-    padding: calc(1.5 * 8px) calc(1 * 8px);
-    display: block;
-    width: 100%;
-    outline: 0;
-    min-height: 48px;
+.bg {
+  background: var(--background);
+}
+
+.flex {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.ts-dropdown .dropdown-input,
+.ts-input {
+  border: 1px solid #d5e3ec;
+  background: #f7fafb;
+  border-radius: 3px;
+  color: #121c42;
+  padding: calc(1.5 * 8px) calc(1 * 8px);
+  display: block;
+  width: 100%;
+  outline: 0;
+  min-height: 48px;
 }
 
 .flex>* {
-    min-width: 0;
+  min-width: 0;
 }
-input, select {
-    font-size: inherit;
-    font-family: inherit;
+
+input,
+select {
+  font-size: inherit;
+  font-family: inherit;
 }
 
 .forum-search button {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .btn-secondary {
-    font-weight: 400;
-    color: var(--color)!important;
-    background: #fff;
-    border: 1px solid #d5e3ec!important;
+  font-weight: 400;
+  color: var(--color) !important;
+  background: #fff;
+  border: 1px solid #d5e3ec !important;
 }
-.btn-danger, .btn-discord, .btn-gradient, .btn-primary, .btn-primary-outlined, .btn-secondary, .btn-social, .btn-white-outlined {
-    text-decoration: none!important;
-    padding: 9px 16px;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    box-shadow: 0 1px 2px rgba(36,57,141,.4);
-    border-radius: 4px;
-    line-height: 1.6;
-    font-family: Inter,sans-serif;
-    font-weight: 700;
-    color: #fff;
-    cursor: pointer;
-    transition: filter .3s,background .3s,color .3s;
-    font-size: .9em;
-    filter: brightness(1);
-    white-space: nowrap;
+
+.btn-danger,
+.btn-discord,
+.btn-gradient,
+.btn-primary,
+.btn-primary-outlined,
+.btn-secondary,
+.btn-social,
+.btn-white-outlined {
+  text-decoration: none !important;
+  padding: 9px 16px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(36, 57, 141, .4);
+  border-radius: 4px;
+  line-height: 1.6;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: filter .3s, background .3s, color .3s;
+  font-size: .9em;
+  filter: brightness(1);
+  white-space: nowrap;
 }
-.form-check input:focus+label::before, .form-group input:focus, .ts-input.focus, form button:focus, input:focus+label .switch, select:focus, textarea:focus {
-    border-color: var(--vert);
-    box-shadow: 0 0 0 3px var(--contrast25);
+
+.form-check input:focus+label::before,
+.form-group input:focus,
+.ts-input.focus,
+form button:focus,
+input:focus+label .switch,
+select:focus,
+textarea:focus {
+  border-color: var(--vert);
+  box-shadow: 0 0 0 3px var(--contrast25);
 }
 
 
-.chapters, .chapters-split, .forum-message, .forum-messages, .list-cursus, .stack, .stack-large, .stack-separated {
-    --gap: 2;
-    display: grid!important;
-    grid-template-columns: 1fr;
-    align-content: flex-start;
-    gap: calc(var(--gap) * 8px);
+.chapters,
+.chapters-split,
+.forum-message,
+.forum-messages,
+.list-cursus,
+.stack,
+.stack-large,
+.stack-separated {
+  --gap: 2;
+  display: grid !important;
+  grid-template-columns: 1fr;
+  align-content: flex-start;
+  gap: calc(var(--gap) * 8px);
 }
 
-a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+a,
+abbr,
+acronym,
+address,
+applet,
+article,
+aside,
+audio,
+b,
+big,
+blockquote,
+body,
+canvas,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 
-.chapters-split>*, .chapters>*, .forum-message>*, .forum-messages>*, .list-cursus>*, .stack-large>*, .stack-separated>*, .stack>* {
-    min-width: 0;
+.chapters-split>*,
+.chapters>*,
+.forum-message>*,
+.forum-messages>*,
+.list-cursus>*,
+.stack-large>*,
+.stack-separated>*,
+.stack>* {
+  min-width: 0;
 }
 
-ol, ul {
-    list-style: none;
+ol,
+ul {
+  list-style: none;
 }
 
 .forum-tags li li a {
-    padding-left: calc(5 * 8px);
-    font-size: .9rem;
+  padding-left: calc(5 * 8px);
+  font-size: .9rem;
 }
 
 .forum-tags a {
-    display: flex;
-    align-items: center;
-    padding: 5px calc(1 * 8px);
+  display: flex;
+  align-items: center;
+  padding: 5px calc(1 * 8px);
 }
+
 a {
-    text-decoration: none;
-    color: inherit;
-    transition: color .3s;
+  text-decoration: none;
+  color: inherit;
+  transition: color .3s;
 }
-.chapters-split>*, .chapters>*, .forum-message>*, .forum-messages>*, .list-cursus>*, .stack-large>*, .stack-separated>*, .stack>* {
-    min-width: 0;
+
+.chapters-split>*,
+.chapters>*,
+.forum-message>*,
+.forum-messages>*,
+.list-cursus>*,
+.stack-large>*,
+.stack-separated>*,
+.stack>* {
+  min-width: 0;
 }
+
 .flex-end {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
+
 .flex {
-    display: flex!important;
-    align-items: center;
-    justify-content: space-between;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
 }
 
+.haut{
+border: 1px solid var(--vert);
+justify-content: center;
+    font-size: 16px;
+    font-weight: bolder;
+    background-color: var(--blanc);
+    margin-bottom: 10px;
 
+}
 
-</style>
+.cadre {
+  /* border: 1px solid red; */
+  width: 100%;
+  /* height: 100px; */
+  padding: 10px;
+  background: var(--blanc);
+  border: 1px solid #d5e3ec;
+  box-shadow: 0 2px 4px #d8e1e8;
+  position: relative;
+
+}
+
+.content:hover{
+  background: var(--blanc);
+  border: 1px solid #d5e3ec;
+  box-shadow: 0 2px 4px #d8e1e8;
+
+}
+
+.cadre_header .image {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  position: absolute;
+  top: 10px;
+
+  /* border: 1px solid rgb(0, 255, 221); */
+
+}
+
+.cadre_header .image img {
+
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.cadre_header .nom {
+  margin-left: 59px;
+
+}
+
+.cadre_text {
+
+  font-weight: 700;
+  font-size: 20px;
+  margin-left: 59px;
+}
+
+.interet {
+  border: 1px solid #d5e3ec;
+  border-radius: 6px;
+  padding: 0px 5px;
+  position: absolute;
+  right: 48px;
+  top: 40px;
+  color: var(--color-text);
+
+}
+
+.icon {
+
+  /* padding: 0px 5px; */
+  position: absolute;
+  right: 10px;
+  top: 42px;
+  color: var(--vert);
+  font-weight: bolder;
+  font-size: 14px;
+}</style>

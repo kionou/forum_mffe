@@ -8,12 +8,25 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <router-link to="/"  class="nav-link">Accueil</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/liste_influente"  class="nav-link">Liste</router-link>
+        </li >
+        <li class="nav-item">
+          <router-link to="/sujet"  class="nav-link">Sujet</router-link>
+        </li>
         
       </ul>
       <!-- <button class="btn btn-outline-dark fw-bold" type="submit">Contact Us</button> -->
       <router-link to="/connexion" class="btnCt" >
           <i class=" bi bi-person-fill-lock"></i>
           <span> Connexion </span>
+        </router-link>
+        <router-link to="/inscription" class="btnCt" >
+          <i class=" bi bi-person-fill-lock"></i>
+          <span> Inscription </span>
         </router-link>
     </div>
   </div>
@@ -50,6 +63,8 @@ export default {
 }
 .navbar .navbar-nav .nav-link {
   color: var( --titre-color);
+  font-size: 15px;
+    font-weight: 500;
 }
 .btn-outline-dark {
   border-radius: 0;
@@ -83,7 +98,8 @@ export default {
     text-decoration: none;
     border: 1px solid var( --titre-color);
     width: 120px;
-    justify-content: space-around
+    justify-content: space-around;
+    margin: 10px;
 
 }
 .btnCt:hover{

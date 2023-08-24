@@ -5,6 +5,8 @@ import Connexion from "../views/Public/Connexion.vue"
 import Inscription from "../views/Public/Inscription.vue"
 import Forum from "../views/Public/Forum.vue"
 import Detail from "../views/Public/Detail.vue"
+import Sujet from "../views/Public/Sujet.vue"
+import Liste from "../views/Public/Liste_influente.vue"
 import Test from "../views/Public/test.vue"
 
 
@@ -27,7 +29,9 @@ const router = createRouter({
         { path: '/connexion', name: 'Connexion', component: Connexion},
         { path: '/inscription', name: ' Inscription', component:  Inscription},
         { path: '/forum', name: ' Forum', component:  Forum},
-        { path: '/Detail', name: ' Forum', component:  Detail},
+        { path: '/sujet', name: ' Sujet', component:  Sujet},
+        { path: '/liste_influente', name: ' Liste', component:  Liste},
+        { path: '/Detail', name: ' Detail', component:  Detail},
         { path: '/test', name: ' Test', component:  Test},
 
 

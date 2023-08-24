@@ -22,7 +22,10 @@
                     </div>
                     <a href="/password/new" class="auth-password-forgot">Mot de passe oublié ?</a>
                 </div>
-                <button type="submit" class="btn-gradient">Se connecter</button>
+                <router-link to="/forum">
+                <button  class="btn-gradient">Se connecter</button>
+
+                </router-link>
             </form>
 
 

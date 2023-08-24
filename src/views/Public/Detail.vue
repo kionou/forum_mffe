@@ -91,83 +91,21 @@
                         <div class="stack">
                             <div class="form-group "><label for="content">Votre message</label>
                                 <div class="mdeditor">
-                                    <div class="mdeditor__toolbar">
-                                        <div class="mdeditor__toolbarleft"><button type="button"><svg
-                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                                                    <path
-                                                        d="M304.793 243.891c33.639-18.537 53.657-54.16 53.657-95.693 0-48.236-26.25-87.626-68.626-104.179C265.138 34.01 240.849 32 209.661 32H24c-8.837 0-16 7.163-16 16v33.049c0 8.837 7.163 16 16 16h33.113v318.53H24c-8.837 0-16 7.163-16 16V464c0 8.837 7.163 16 16 16h195.69c24.203 0 44.834-1.289 66.866-7.584C337.52 457.193 376 410.647 376 350.014c0-52.168-26.573-91.684-71.207-106.123zM142.217 100.809h67.444c16.294 0 27.536 2.019 37.525 6.717 15.828 8.479 24.906 26.502 24.906 49.446 0 35.029-20.32 56.79-53.029 56.79h-76.846V100.809zm112.642 305.475c-10.14 4.056-22.677 4.907-31.409 4.907h-81.233V281.943h84.367c39.645 0 63.057 25.38 63.057 63.057.001 28.425-13.66 52.483-34.782 61.284z">
-                                                    </path>
-                                                </svg></button><button type="button"><svg fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                    <path
-                                                        d="M7.859 14.691l-.81.805a1.814 1.814 0 01-2.545 0 1.762 1.762 0 010-2.504l2.98-2.955c.617-.613 1.779-1.515 2.626-.675a.993.993 0 101.397-1.407c-1.438-1.428-3.566-1.164-5.419.675l-2.98 2.956A3.72 3.72 0 002 14.244a3.72 3.72 0 001.108 2.658 3.779 3.779 0 002.669 1.096c.967 0 1.934-.365 2.669-1.096l.811-.805a.988.988 0 00-.695-1.692.995.995 0 00-.703.286zm9.032-11.484c-1.547-1.534-3.709-1.617-5.139-.197l-1.009 1.002a.99.99 0 001.396 1.406l1.01-1.001c.74-.736 1.711-.431 2.346.197.336.335.522.779.522 1.252s-.186.917-.522 1.251l-3.18 3.154c-1.454 1.441-2.136.766-2.427.477a.992.992 0 00-1.615.327.99.99 0 00.219 1.079c.668.662 1.43.99 2.228.99.977 0 2.01-.492 2.993-1.467l3.18-3.153A3.732 3.732 0 0018 5.866a3.726 3.726 0 00-1.109-2.659z">
-                                                    </path>
-                                                </svg></button><button type="button"><svg xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 384 512">
-                                                    <path
-                                                        d="M96 256V96c0-53.019 42.981-96 96-96s96 42.981 96 96v160c0 53.019-42.981 96-96 96s-96-42.981-96-96zm252-56h-24c-6.627 0-12 5.373-12 12v42.68c0 66.217-53.082 120.938-119.298 121.318C126.213 376.38 72 322.402 72 256v-44c0-6.627-5.373-12-12-12H36c-6.627 0-12 5.373-12 12v44c0 84.488 62.693 154.597 144 166.278V468h-68c-6.627 0-12 5.373-12 12v20c0 6.627 5.373 12 12 12h184c6.627 0 12-5.373 12-12v-20c0-6.627-5.373-12-12-12h-68v-45.722c81.307-11.681 144-81.79 144-166.278v-44c0-6.627-5.373-12-12-12z">
-                                                    </path>
-                                            </svg></button></div>
-                                    <div class="mdeditor__toolbarright"><button type="button"><svg
-                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                                                style="{style}">
-                                                <path
-                                                    d="M352.201 425.775l-79.196 79.196c-9.373 9.373-24.568 9.373-33.941 0l-79.196-79.196c-15.119-15.119-4.411-40.971 16.971-40.97h51.162L228 284H127.196v51.162c0 21.382-25.851 32.09-40.971 16.971L7.029 272.937c-9.373-9.373-9.373-24.569 0-33.941L86.225 159.8c15.119-15.119 40.971-4.411 40.971 16.971V228H228V127.196h-51.23c-21.382 0-32.09-25.851-16.971-40.971l79.196-79.196c9.373-9.373 24.568-9.373 33.941 0l79.196 79.196c15.119 15.119 4.411 40.971-16.971 40.971h-51.162V228h100.804v-51.162c0-21.382 25.851-32.09 40.97-16.971l79.196 79.196c9.373 9.373 9.373 24.569 0 33.941L425.773 352.2c-15.119 15.119-40.971 4.411-40.97-16.971V284H284v100.804h51.23c21.382 0 32.09 25.851 16.971 40.971z">
-                                                </path>
-                                            </svg></button></div>
-                                </div>
-                                <div class="mdeditor__editor">
-                                    <div class="CodeMirror cm-s-neo CodeMirror-wrap" translate="no"
-                                        style="clip-path: inset(0px);">
-                                        <div
-                                            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 14px; left: 14px;">
-                                            <textarea autocorrect="off" autocapitalize="off" spellcheck="false"
-                                                tabindex="0"
-                                                style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; min-height: 1em; outline: none;"></textarea>
-                                        </div>
-                                        <div class="CodeMirror-vscrollbar" tabindex="-1" cm-not-content="true">
-                                            <div style="min-width: 1px; height: 0px;"></div>
-                                        </div>
-                                        <div class="CodeMirror-hscrollbar" tabindex="-1" cm-not-content="true">
-                                            <div style="height: 100%; min-height: 1px; width: 0px;"></div>
-                                        </div>
-                                        <div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div>
-                                        <div class="CodeMirror-gutter-filler" cm-not-content="true"></div>
-                                        <div class="CodeMirror-scroll" tabindex="-1">
-                                            <div class="CodeMirror-sizer"
-                                                style="margin-left: 0px; margin-bottom: -7px; border-right-width: 43px; min-height: 31px; padding-right: 0px; padding-bottom: 0px;">
-                                                <div style="position: relative; top: 0px;">
-                                                    <div class="CodeMirror-lines" role="presentation">
-                                                        <div role="presentation"
-                                                            style="position: relative; outline: none;">
-                                                            <div class="CodeMirror-measure">
-                                                                <pre
-                                                                    class="CodeMirror-line-like"><span>xxxxxxxxxx</span></pre>
-                                                            </div>
-                                                            <div class="CodeMirror-measure"></div>
-                                                            <div style="position: relative; z-index: 1;"></div>
-                                                            <div class="CodeMirror-cursors">
-                                                                <div class="CodeMirror-cursor"
-                                                                    style="left: 4px; top: 0px; height: 23px;">&nbsp;
-                                                                </div>
-                                                            </div>
-                                                            <div class="CodeMirror-code" role="presentation">
-                                                                <pre class=" CodeMirror-line "
-                                                                    role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                style="position: absolute; height: 43px; width: 1px; border-bottom: 0px solid transparent; top: 31px;">
-                                            </div>
-                                            <div class="CodeMirror-gutters" style="display: none; height: 74px;"></div>
-                                        </div>
+                            <div class="mdeditor__toolbar">
+                                <div class="mdeditor__toolbarleft">
+                                    
                                     </div>
-                                </div>
-                            </div><textarea name="content" id="content" type="editor" placeholder="Votre message"
-                                style="display: none;"></textarea>
+                                <div class="mdeditor__toolbarright">
+                                   
+                                    </div>
+                            </div>
+                          
+                    </div>
+                    <textarea id="forum_topic_form_content" name="forum_topic_form[content]" required="required"
+                        class="form-control" >
+
+
+                 </textarea>
                         </div>
                        
                                 <button class="btn btn-primary ">Répondre</button>
@@ -512,8 +450,8 @@ label {
 
 
 .form-group textarea {
-    min-height: 150px;
-    display: none;
+    min-height: 200px;
+   
 }
 
 .stack>button {
@@ -545,40 +483,63 @@ label {
 
 
 
-.cm-s-neo.CodeMirror {
+.mdeditor {
+    position: relative;
     background-color: #fff;
-    color: #2e383c;
-    line-height: 1.4375;
-    clip-path: inset(0px);
+    box-shadow: 0 1px 10px rgba(0,0,0,.05);
+    border: solid 1px var(--border);
+    background: var(--bg);
+    transition: box-shadow .3s;
 }
+
+.mdeditor__toolbar {
+    position: relative;
+    display: flex;
+    z-index: 3;
+    height: 34px;
+    background-color: var(--bg);
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+
+.mdeditor__toolbar button {
+    height: 34px;
+    width: 34px;
+    border: none;
+    background: 0 0;
+    cursor: pointer;
+    outline: 0;
+    color: var(--color-text);
+}
+
+.mdeditor__toolbar svg {
+    margin-top: 3px;
+    fill: currentColor;
+    width: 15px;
+    height: 15px;
+}
+.mdeditor__toolbarright {
+    margin-left: auto;
+}
+
+
+
 .mdeditor .CodeMirror {
     height: auto;
 }
-.CodeMirror {
-    position: relative;
-    overflow: hidden;
-    background: #fff;
-}
-.CodeMirror {
-    font-family: monospace;
-    height: 300px;
-    color: #000;
-    direction: ltr;
-}
-.CodeMirror {
-    color: var(--text-color)!important;
-}
 
-.CodeMirror-vscrollbar {
-    right: 0;
-    top: 0;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
+
 
 .mdeditor .CodeMirror-scroll {
     background: var(--bg);
     min-height: 100px;
     max-height: calc(100vh - 200px);
+}
+.form-control:focus{
+   box-shadow: none !important;
+   border-color: var(--vert);
+}
+
+.form-group textarea {
+    min-height: 250px;
 }
 </style>

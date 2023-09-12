@@ -52,6 +52,7 @@ export default {
     --bleu:#4879ef;
     --noir: #000;
     --vert:#6fae4d;
+    --orange:#ff6604;
     --jaune:#fd0;
     --bggris1:#293949;
     --bggris2:#2e4051;

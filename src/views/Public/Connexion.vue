@@ -1,20 +1,24 @@
 <template>
+    <Loading v-if="loading"></Loading>
     <div>
         <div class="auth-container my5">
 
             <h1 class="auth-title fade in">Se connecter</h1>
 
-
+            <small >{{error}}</small>
 
             <form class="auth-form fade fade-1 in" method="post">
                 <div class="form-group">
                     <label for="inputEmail">Nom d'utilisateur</label>
-                    <input type="text" value="" name="email" id="inputEmail" class="form-control" required="" autofocus="">
+                    <input type="text" name="email" id="inputEmail" class="form-control" v-model="email">
                 </div>
+                <small v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</small>  
+                
                 <div class="form-group">
                     <label for="inputPassword">Mot de passe</label>
-                    <input type="password" name="password" id="inputPassword" class="form-control" required="">
+                    <input type="password" name="password" id="inputPassword" class="form-control" v-model="password" >
                 </div>
+                <small v-if="v$.password.$error">{{ v$.password.$errors[0].$message }}</small>  
                 <div class="auth-actions flex">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="rememberMe" name="_remember_me">
@@ -22,10 +26,10 @@
                     </div>
                     <a href="/password/new" class="auth-password-forgot">Mot de passe oublié ?</a>
                 </div>
-                <router-link to="/forum">
-                <button  class="btn-gradient">Se connecter</button>
+               
+                <button  class="btn-gradient"  @click.prevent="submit">Se connecter</button>
 
-                </router-link>
+               
             </form>
 
 
@@ -35,26 +39,110 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import useVuelidate from '@vuelidate/core';
+import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
+import axios from '@/lib/axiosConfig.js'
+import Loading from '../../components/other/preloader.vue';
+
+
+
 export default {
     name: 'ForumMffeConnexion',
+    components:{
+        Loading
+    },
 
     data() {
         return {
-
+            v$:useVuelidate(), 
+            email: '',
+            password: '',
+            error:'',
+            loading:false
         };
     },
+    validations: {
+    email: {
+      require,
+      ValidEmail
+    },
+    password: {
+      require,
+      lgmin: lgmin(8),
+      lgmax: lgmax(20),
+    },
+ 
+  },
 
     mounted() {
 
     },
 
     methods: {
+        ...mapActions({  loginUser: 'loginUser', }),
+        async submit() {
+       
+       this.v$.$touch()
+       this.error = ''
+       if (this.v$.$errors.length == 0 ) {
+       this.loading = true
+         let DataUser = {
+         email: this.email,
+         password: this.password,
+                 
+       }
+       console.log('eeedata', DataUser);
+       try {
+      const response = await axios.post('/users/sign-up-user' , DataUser);
+      console.log('response.login', response); 
+      if (response.data.statut === "success") {
+        const userDatas ={
+          token:response.data.token,
+          user:response.data.user  
+        } 
+        console.log(response.data.user.statut);
+
+        if (response.data.user.statut === "M") {
+            this.loginUser(userDatas);
+         this.loading = false
+         this.$router.push('/moderatrice');
+        } else {
+         this.loginUser(userDatas);
+       this.loading = false
+         this.$router.push('/forum');
+        }
+        
+       
+        
+          } else {
+       this.loading = false
+          return this.error = response.data.alert
+          
+          }
+      
+    } catch (error) {
+       return this.error = "L'authentification a échoué"
+    }
+       
+         }else{
+        console.log('pas bon' , this.v$.$errors );
+
+        }
+   },
 
     },
 };
 </script>
 
 <style lang="css" scoped>
+
+small {
+  color: #f8001b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .auth-container {
     width: 100%;
    

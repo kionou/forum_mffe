@@ -1,4 +1,5 @@
 <template>
+        <Loading v-if="loading"></Loading>
     <div>
         <section class=" hero-grid my5 px-4">
             <div class="stack" style="align-self: flex-start">
@@ -13,15 +14,21 @@
                 </p>
             </div>
             <div class="stack-large">
-                <form name="forum_topic_form" method="post" class="grid fit js-preventMultiSubmit" style="--col:300px">
+                <form class="grid fit js-preventMultiSubmit" style="--col:300px">
                     <div class="d-flex justify-content-between " style="margin-bottom: 20px;">
-                        <div class="form-group" style="max-width: 350px; width: 100%; padding: 0 10px;"><label for="forum_topic_form_name" class="required">Titre</label><input
-                            type="text" id="forum_topic_form_name" name="forum_topic_form[name]" required="required"
-                            class="form-control">
+                        <div class="form-group" style="max-width: 350px; width: 100%; padding: 0 10px;">
+                            <label for="forum_topic_form_name" class="required">Titre</label>
+                            <input type="text" id="forum_topic_form_name"   class="form-control" v-model="titre">
+                          <small v-if="v$.titre.$error">{{ v$.titre.$errors[0].$message }}</small>  
+
                         </div>
-                        <div class="form-group" style="max-width: 350px; width: 100%;  padding: 0 10px;"><label for="forum_topic_form_name" class="required">Centre d'interet</label><input
-                            type="text" id="forum_topic_form_name" name="forum_topic_form[name]" required="required"
-                            class="form-control">
+                        <div class="form-group" style="max-width: 350px; width: 100%;  padding: 0 10px;">
+                            <label for="forum_topic_form_name" class="required">Centre d'interet</label>
+                            <select name="" id="" class="form-control" v-model="centre">
+                                <option value="" selected="true">Choisir un centre d'interet</option>
+                                <option v-for="centre in CentreOptions" :key="centre.id" :value="centre._id">{{ centre.nom }}</option>
+                            </select>
+                            <small v-if="v$.centre.$error">{{ v$.centre.$errors[0].$message }}</small>  
                         </div>
                     </div>
                     
@@ -38,52 +45,180 @@
                             </div>
                           
                     </div>
-                    <textarea id="forum_topic_form_content" name="forum_topic_form[content]" required="required"
-                        class="form-control" >Décrivez ici votre problème ou ce que vous cherchez à faire.
-
-```
-Entourez votre code en utilisant "```" pour bien le mettre en forme. (ne copiez pas trop de code)
-```
-
-**Ce que je veux**
-
-Décrivez ce que vous cherchez à obtenir.
-
-**Ce que j'obtiens**
-
-Décrivez vos éventuelles erreurs ou ce que vous obtenez à la place de ce que vous attendez :(
+                    <textarea id="forum_topic_form_content"  class="form-control" v-model="contenu" style="min-height: 250px;" placeholder="Votre Sujet.......">
+           
                  </textarea>
+                 <small v-if="v$.contenu.$error">{{ v$.contenu.$errors[0].$message }}</small>  
+                 
                 </div>
                 <div class="full text-right">
-                    <button type="submit" class="btn-gradient mt-4">Créer le sujet</button>
+                    <button  @click.prevent="submit" class="btn-gradient mt-4">Créer le sujet</button>
                 </div>
                
             </form>
         </div>
     </section>
-</div></template>
+</div>
+<MazDialog v-model="msgsuccesspost" >
+        <p>
+            Votre sujet a été soumis avec succès aux modérateurs pour examen et validation. Merci de patienter pendant qu'ils le vérifient.
+        </p>
+        <template #footer>
+  
+          <div class="supp" @click="close" style="background-color: blue; "> Ok</div>
+  
+        </template>
+      </MazDialog>
+</template>
 
 <script>
+import useVuelidate from '@vuelidate/core';
+import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
+import { mapGetters } from 'vuex';
+import io from 'socket.io-client';
+import axios from '@/lib/axiosConfig.js'
+import MazDialog from 'maz-ui/components/MazDialog'
+import Loading from '../../components/other/preloader.vue';
 export default {
     name: 'ForumMffeSujet',
+     components:{MazDialog , Loading},
+    computed: {
+      ...mapGetters(['getUser']),
+  },
 
     data() {
         return {
-
+            titre:'',
+            centre:'',
+            contenu:'',
+            CentreOptions:[],
+            error:'',
+            v$:useVuelidate(), 
+            msgsuccesspost:false,
+//             socket : io('http://localhost:5000/api/sujet/1',{
+//              withCredentials: true
+// })
         };
     },
+    validations: {
+        titre: {
+      require,
+      lgmin: lgmin(5), 
+    },
+    centre: {
+      require,  
+    },
+    contenu: {
+      require,
+      lgmin: lgmin(20),
+     
+    },
+ 
+  },
 
     mounted() {
-
+        this.fetchCentreOptions()
+        console.log('Informations de l\'utilisateur :', this.getUser);
+        // this.socket.emit('nouveau_sujet', 'DataUser' );
     },
 
     methods: {
+        async fetchCentreOptions() {
+            try {
+
+                await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
+                const options = JSON.parse(JSON.stringify(this.$store.getters['getCentreData']));
+
+                // await this.$store.dispatch('fetchSujetData'); // Action spécifique aux bourses
+                // const option = JSON.parse(JSON.stringify(this.$store.getters['getSujetData']));
+                // console.log('Options centre:', option.data);
+
+                this.CentreOptions = options.data;
+                // this.SujetOptions = option.data
+            } catch (error) {
+                console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
+            }
+        },
+ async submit() {
+       
+       this.v$.$touch()
+       this.error = ''
+       if (this.v$.$errors.length == 0 ) {
+        this.loading = true
+       
+         let DataUser = {
+         titre: this.titre,
+         contenu: this.contenu,
+         user_id:this.getUser.user.id,
+         centre_id:this.centre
+                 
+       }
+       console.log('datauser', DataUser);
+    //    this.socket.emit('nouveau_sujet', DataUser );
+    //    this.socket.on('message_influenceur', (messageId) => {
+    //     console.log('message',messageId);
+  // Mettre à jour l'état du message dans l'interface utilisateur
+  // (par exemple, marquer le message comme approuvé)
+// });
+
+      
+       try {
+      const response = await axios.post('/sujet/1', DataUser);
+  
+      console.log('response.login', response); 
+      if (response.data.statut === "success") {
+        console.log(response.data);
+       this.loading = false
+       this.msgsuccesspost = true
+       
+          } else {
+          return this.error = response.data.alert
+          
+          }
+      
+            } catch (error) {
+            return this.error = "L'authentification a échoué"
+            }
+       
+         }else{
+        console.log('pas bon' , this.v$.$errors );
+
+        }
+   },
+   close(){
+    this.isOpen = false
+    this.$router.push('/forum');
+
+}
 
     },
 };
 </script>
 
 <style lang="css" scoped>
+
+.supp {
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  border-radius: 45px;
+  z-index: 3;
+  cursor: pointer;
+  outline: none;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+}
+small {
+  color: #f8001b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .chapters, .chapters-split, .forum-message, .forum-messages, .list-cursus, .stack, .stack-large, .stack-separated {
     --gap: 2;
     display: grid!important;

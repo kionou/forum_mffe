@@ -7,9 +7,21 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0" v-if="getUser && getUser.user.statut === 'M'">
         <li class="nav-item">
-          <router-link to="/"  class="nav-link">Accueil</router-link>
+          <router-link to="/moderatrice"  class="nav-link">Accueil</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/moderatrice/sujet/accepter"  class="nav-link">Sujet Postuler</router-link>
+        </li >
+        <li class="nav-item">
+          <router-link to="/moderatrice/sujet/rejeter"  class="nav-link">Sujet Rejeter</router-link>
+        </li>
+        
+      </ul>
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0" v-else>
+        <li class="nav-item">
+          <router-link to="/forum"  class="nav-link">Accueil</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/liste_influente"  class="nav-link">Liste</router-link>
@@ -19,15 +31,30 @@
         </li>
         
       </ul>
-      <!-- <button class="btn btn-outline-dark fw-bold" type="submit">Contact Us</button> -->
-      <router-link to="/connexion" class="btnCt" >
+      <div  v-if="getUser" >
+          <div class="btnCt "  role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 130px;">
+        <i class="bi bi-person-fill"></i>
+          <span> Mon compte </span>
+          
+       </div>
+                <ul class="dropdown-menu menu"  >
+             <!-- <li><router-link to="/mon_espace"  class="dropdown-item d-flex justify-content-around" ><i class="bi bi-postcard pt-0"></i>Mon espace</router-link></li> -->
+             <li><router-link to="/profil"  class="dropdown-item d-flex justify-content-around" ><i class="bi bi-postcard pt-0"></i>Mon profil</router-link></li>            
+             <li><span class="dropdown-item d-flex justify-content-around " style="cursor:pointer;" @click="logout" ><i class="bi bi-box-arrow-in-right pt-0"></i>Déconnexion</span></li>
+             
+           </ul>
+               </div>
+               <div  v-else style="display: flex;">
+                <router-link to="/connexion" class="btnCt"  >
           <i class=" bi bi-person-fill-lock"></i>
           <span> Connexion </span>
         </router-link>
-        <router-link to="/inscription" class="btnCt" >
+        <router-link to="/inscription" class="btnCt"  >
           <i class=" bi bi-person-fill-lock"></i>
           <span> Inscription </span>
         </router-link>
+               </div>
+         
     </div>
   </div>
 </nav>
@@ -36,8 +63,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
     name: 'ForumMffeNavbar',
+    computed: {
+  ...mapGetters(['getUser']),
+},
 
     data() {
         return {
@@ -46,11 +78,16 @@ export default {
     },
 
     mounted() {
+      console.log('navbar',this.getUser);
         
     },
 
     methods: {
-        
+      ...mapActions({  logoutUser: 'logoutUser', }),
+    logout() {
+      this.logoutUser(); // Appeler la méthode de déconnexion lors du clic sur le bouton de déconnexion
+      this.$router.push('/connexion');
+    },
     },
 };
 </script>
@@ -105,6 +142,13 @@ export default {
 .btnCt:hover{
 color: var( --vert);
 border: 1px solid var(--vert);
+}
+
+
+.dropdown-menu.show {
+    display: block;
+    right: 16px;
+    left: auto !important;
 }
 
 

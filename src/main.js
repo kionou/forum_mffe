@@ -7,7 +7,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-
+import store from './store'
 
 
 
@@ -38,5 +38,6 @@ app.component('MazTextarea', MazTextarea)
 
 // app.use(store);
 app.use(vuetify);
+app.use(store);
 app.use(router)
 app.mount('#app')

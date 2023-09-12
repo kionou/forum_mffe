@@ -1,116 +1,86 @@
 <template>
   <Loading v-if="loading"></Loading>
-  <div>
-    <div class=" page-header forum-header">
-      <h1 class="hero-title" style="white-space: nowrap">Forum</h1>
-      <form class="form-group flex forum-search" action="/forum/search">
-        <input type="text" name="q" placeholder="Rechercher un sujet" value="" required="">
-        <button type="submit" class="btn-secondary">Rechercher</button>
-      </form>
-    </div>
-    <div class="forum-page bg py3">
-      <div class="forum-page__sidebar stack px-3">
-        <ul class="forum-tags">
-          <li>
-            <a href="/forum" class="haut">
-              Tous les sujets
-            </a>
-          </li>
-          <li v-for="centre in CentreOptions" :key="centre.id">
-            <a href="/forum/bases-91" class="content">
-             {{ centre.nom }}
-            </a>
-          </li>
-          
+    <div class="general">
+        
+        <div class="page-header">
+            <div class="container">
+                <!-- <div class="page-header__inner">
+                    <h1 class="display-2">Bienvenue  loggedInUser.prenom  loggedInUser.no </h1>
+                    <p>Votre espace personnel vous permet d’effectuer et de faire le suivi de votre entreprise</p>
+                </div> -->
+            </div>
+        </div>
 
-        </ul>
-      </div>
-      <main class="forum-page__main stack">
-        <div class="noresul" v-if="SujetOptions.length === 0">
+        <main class="forum-page__main stack"  style="max-width: 1140px; margin: 20px auto; padding: 10px;">
+            <h2 style="    font-size: 22px;
+    font-weight: bolder;">sujet(s) Rejété(s)</h2>
+        <div v-if="sujetsAvecStatutNull.length === 0">
 
           <p>aucun sujet postuler pour l'instant</p>
         </div>
      
         
-        <div class="cadre" v-else  v-for="sujet in SujetOptions" :key="sujet.id" @click="$router.push({ path: `/forum/${sujet._id}`, })" >
+        <div class="cadre" v-else  v-for="sujet in sujetsAvecStatutNull" :key="sujet.id" @click="$router.push({ path: `/moderatrice/sujet/${sujet._id}`, })" >
           <div class="cadre_header">
-            <div class="image" v-if="sujet.user_id">
+            <div class="image">
               <img :src="sujet.user_id.image" alt="">
             </div>
-            <div class="nom" v-if="sujet.user_id">
-              <p>{{ sujet.user_id.nom }} {{ sujet.user_id.prenom }}, <span>il y'a,{{formatRelativeDate(sujet.createdAt) }}</span> </p>
+            <div class="nom">
+              <p> {{sujet.user_id.nom }} {{sujet.user_id.prenom}} , <span>il y'a, {{formatRelativeDate(sujet.createdAt) }}</span> </p>
             </div>
           </div>
           <div class="cadre_text">
-            <h2>{{ sujet.titre }}</h2>
+            <h2>{{sujet.titre}} </h2>
           </div>
           <div class="interet">
-            <p>{{ sujet.centre_id.nom }}</p>
+            <p> {{sujet.centre_id.nom}} </p>
           </div>
           <div class="icon">
-            <i class="bi bi-chat-dots"></i> <span>{{ commentaire(sujet._id) }}</span>
+            <i class="bi bi-chat-dots"></i> <span>1</span>
           </div>
         </div>
 
+
+
+
+
+
+
       </main>
     </div>
-
-  </div>
 </template>
 
 <script>
- import Loading from '../../components/other/preloader.vue';
-
-  import { formatRelativeDate } from '../../lib/dateUtils';
-   
-
+import io from 'socket.io-client';
+import { formatRelativeDate } from '../../lib/dateUtils';
+import Loading from '../../components/other/preloader.vue';
 export default {
-  name: 'ForumMffeForum',
-  components:{
-    Loading
-  },
+    name: 'ForumMffeModeratrice',
+    components:{ Loading},
 
-  data() {
-    return {
-      CentreOptions:[],
-      SujetOptions:[],
-      commentsForTopic:[],
-      nbreComment:'',
-    inscriptionDuration:'',
-    loading:true
-    };
-  },
-
- async mounted() {
-  await this.fetchCommentaireOptions()
-  await this.fetchCentreOptions()
-
-
-  
-
-  },
-
-  methods: {
-    formatRelativeDate:formatRelativeDate,
-    commentaire(id){
-      return  this.nbreComment = this.commentsForTopic.data.filter(comment => comment.sujet_id._id === id).length;
+    data() {
+        return {
+//     socket : io('http://localhost:5000/api/sujet',{
+//     withCredentials: true
+// })
+        sujetsAvecStatutNull:[],
+        nbretotal:'',
+        loading:true, 
+            
+        };
     },
-    async fetchCommentaireOptions() {
-            try {
 
-                await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
-                this.commentsForTopic = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
-                console.log('options',this.commentsForTopic)
-                
-                
+  async  mounted() {
+        // this.socket.on('message_All', (DataUser) => {
+        
+        //         console.log('data',DataUser);
+        // });
+        await this.fetchCentreOptions()
+    },
 
-              
-            } catch (error) {
-                console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
-            }
-        },
- 
-    async fetchCentreOptions() {
+    methods: {
+        formatRelativeDate:formatRelativeDate,
+        async fetchCentreOptions() {
             try {
 
                 await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
@@ -118,35 +88,81 @@ export default {
 
                 await this.$store.dispatch('fetchSujetData'); // Action spécifique aux bourses
                 const option = JSON.parse(JSON.stringify(this.$store.getters['getSujetData']));
-                // console.log('Options centre:', option.data);
+                 console.log('Options centre:', option.data);
 
                 this.CentreOptions = options.data;
-                this.SujetOptions =  option.data.filter(sujet => sujet.statut === "1");
+                this.SujetOptions = option.data
+                this.sujetsAvecStatutNull = option.data.filter(sujet => sujet.statut === "0");
+                console.log('Options centre:',  this.sujetsAvecStatutNull);
                 this.loading = false
+
+              
             } catch (error) {
                 console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
             }
         },
-   
-  },
- 
+    },
 };
 </script>
 
 <style lang="css" scoped>
-.noresul {
-    border: 1px solid var(--vert);
-    max-width: 1140px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px;
-    border-radius: 6px;
-    font-size: 20px;
-  
-  }
-@media (min-width: 800px) {
+    .general{
+    
+/* border: 1px solid red; */
+width: 100%;
+height: 100vh;
+background-color: var(--blanc);
+    }
+    .page-header {
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #266486;
+    padding-bottom: 50px;
+    padding-top: 100px;
+    background-image: url('@/assets/image/img1.webp'); 
+    box-shadow:inset 0 0 0 2000px rgba(0, 0, 0, 10%);
+    height: 40vh;
+
+}
+
+.page-header:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .45);
+}
+.page-header__inner {
+    position: relative;
+}
+
+.fade:not(.show) {
+    display: none;
+    opacity: 0;
+}
+.page-header h1 {
+    position: relative;
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 700;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+    text-transform: inherit;
+}
+.page-header p {
+    max-width: 530px;
+    font-size: 1.375rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+
+
+  @media (min-width: 800px) {
   .forum-header {
     display: flex;
     align-items: center;
@@ -161,7 +177,7 @@ export default {
 }
 
 .page-header {
-  background: var(--blanc);
+
   border-bottom: 1px solid #d5e3ec;
   padding: calc(6 * 8px) 10px ;
 }
@@ -498,12 +514,12 @@ justify-content: center;
 
 }
 
-.content:hover{
+/* .content:hover{
   background: var(--blanc);
   border: 1px solid #d5e3ec;
   box-shadow: 0 2px 4px #d8e1e8;
 
-}
+} */
 
 .cadre_header .image {
   width: 50px;
@@ -555,4 +571,6 @@ justify-content: center;
   color: var(--vert);
   font-weight: bolder;
   font-size: 14px;
-}</style>
+}
+
+</style>

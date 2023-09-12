@@ -1,4 +1,5 @@
 <template>
+    <Loading v-if="loading"></Loading>
     <div>
         <div class="auth-container my5">
 
@@ -6,22 +7,23 @@
             <h1 class="auth-title fade in">
                 S'inscrire
             </h1>
+            <small>{{error}}</small>  
             <form name="registration_form" method="post" class="auth-form fade fade-1 in">
 
                 <div class="row mb-3 mt-3 content-group">
                     <div class="col">
                         <div class="form-group">
-                    <label for="registration_form_username" class="required">Nom </label>
-                        <input type="text" id="registration_form_username"
-                        name="nom"  class="form-control">
-                    </div>
-
+                        <label for="registration_form_username" class="required">Nom </label>
+                        <input type="text" id="registration_form_username" name="nom"  class="form-control" v-model="nom">
+                        </div>
+                        <small v-if="v$.nom.$error">{{ v$.nom.$errors[0].$message }}</small>
                     </div>
                     <div class="col">
                         <div class="form-group">
-                    <label for="registration_form_username" class="required">Prenoms</label>
+                         <label for="registration_form_username" class="required">Prenoms</label>
                         <input type="text" id="prenom"
-                        name="prenom" required="required" class="form-control">
+                        name="prenom" required="required" class="form-control" v-model="prenom">
+                        <small v-if="v$.prenom.$error">{{ v$.prenom.$errors[0].$message }}</small>  
                     </div>
 
                     </div>
@@ -29,9 +31,9 @@
                 <div class="row mb-3 mt-3 content-group">
                     <div class="col">
                         <div class="form-group">
-                    <label for="registration_form_email" class="required">Adresse email</label><input type="email"
-                        id="registration_form_email" name="email" 
-                        class="form-control">
+                    <label for="registration_form_email" class="required">Adresse email</label>
+                    <input type="email" id="registration_form_email" name="email"  class="form-control" v-model="email">
+                    <small v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</small>  
                 </div>
 
                     </div>
@@ -39,7 +41,9 @@
                         <div class="form-group">
                     <label for="registration_form_username" class="required">Nom d'utilisateur</label>
                         <input type="text" id="registration_form_username"
-                        name="pseudo" class="form-control">
+                        name="pseudo" class="form-control" v-model="pseudo">
+                        <small v-if="v$.pseudo.$error">{{ v$.pseudo.$errors[0].$message }}</small>  
+
                     </div>
 
                     </div>
@@ -50,7 +54,9 @@
                         <div class="form-group">
                     <label for="registration_form_username" class="required">Numéro Téléphonique </label>
                         <input type="tel" id="password"
-                        name="numero"  class="form-control">
+                        name="numero"  class="form-control" v-model="numero">
+                        <small v-if="v$.numero.$error">{{ v$.numero.$errors[0].$message }}</small>  
+
                     </div>
 
                     </div>
@@ -62,52 +68,202 @@
                         <div class="form-group">
                     <label for="registration_form_username" class="required">Mot de passe </label>
                         <input type="password" id="password"
-                        name="nom"  class="form-control">
+                        name="nom"  class="form-control" v-model="password">
+                        <small v-if="v$.password.$error">{{ v$.password.$errors[0].$message }}</small>  
+
                     </div>
 
                     </div>
                     <div class="col">
                         <div class="form-group"><label for="registration_form_plainPassword_second" class="required">Confirmer le
-                        mot de passe</label><input type="password" id="registration_form_plainPassword_second"
+                        mot de passe</label>
+                        <input type="password" id="registration_form_plainPassword_second"
                         name="password" 
-                        class="form-control"></div>
+                        class="form-control" v-model="confirmer_password">
+                        <small v-if="v$.confirmer_password.$error">{{ v$.confirmer_password.$errors[0].$message }}</small>  
+                        <small v-if="!validatePasswordsMatch()" >Les mots de passe ne correspondent pas.</small>
+
+                    </div>
+
 
                     </div>
                 </div>
 
-             
-             
-              
-
-                <button type="submit" class="btn-gradient">S'inscrire</button>
+                <button type="submit" @click.prevent="submit" class="btn-gradient">S'inscrire</button>
 
             </form>
 
         </div>
+        
+    <MazDialog v-if="isOpen" v-model="isOpen" width="auto" noClose>
+        <div class="form-container">
+	<p class="title">
+    <img src="@/assets/image/success.png" alt="">
+  </p>
+    <p class="text-center mb-3"> 
+      Félicitations ! Votre compte a été créé avec succès. Veuillez vous connecter pour commencer
+       à utiliser notre plateforme. Bienvenue parmi nous !
+      
+    </p>
+	
+		<button class="btn-gradient" @click="redirect">Se connecter</button>
+    </div> 
+
+    </MazDialog>
     </div>
 </template>
 
 <script>
+import useVuelidate from '@vuelidate/core';
+import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
+import axios from '@/lib/axiosConfig.js'
+import MazDialog from 'maz-ui/components/MazDialog'
+import Loading from '../../components/other/preloader.vue';
 export default {
     name: 'ForumMffeInscription',
+    components:{MazDialog , Loading},
 
     data() {
         return {
-
+            v$:useVuelidate(), 
+            isOpen:false,
+            loading:false,
+        nom: '',
+      prenom: '',
+        email: '',
+        pseudo:'',
+        numero:'',
+      password: '',
+      confirmer_password: '',
+      error:'',
         };
     },
+     
+  validations: {
+    nom: {
+      require, 
+      lgmin: lgmin(2),
+      lgmax: lgmax(20),  
+    },
+    prenom: {
+      require,
+      lgmin: lgmin(2),
+      lgmax: lgmax(20),
+    },
+    email: {
+      require,
+      ValidEmail
+    
+    },
+    pseudo: {
+      require,
+      lgmin: lgmin(3),
+    },
+    numero: {
+      require,
+      ValidNumeri,
+      lgmin: lgmin(10),
+      lgmax: lgmax(10),
+    },
+    password: {
+      require,
+      lgmin: lgmin(8),
+      lgmax: lgmax(20),
+    },
+    confirmer_password: {
+      require,
+      lgmin: lgmin(8),
+      lgmax: lgmax(20),
+    },
+ 
+  },
 
     mounted() {
 
     },
 
     methods: {
+        validatePasswordsMatch() {
+      return this.password === this.confirmer_password;
+    },
+    redirect(){
+        this.isOpen = false
+        this.$router.push('/connexion');
+    },
+    async submit() {
+       
+       this.v$.$touch()
+       this.error = ''
+       if (this.v$.$errors.length == 0 ) {
+        this.loading = true
+         let DataUser = {
+         nom: this.nom,
+         prenom: this.prenom,
+         email: this.email,
+         pseudo:this.pseudo,
+         numero:this.numero,
+         password: this.password,
+         statut:'L'
+                 
+       }
+       console.log('eeedata', DataUser);
+       try {
+         const response = await axios.post('/users/sign-in-user', DataUser);
+         console.log('response.sousprefecture', response);
+         if (response.data.statut === 'success') {
+            this.loading = false
+            this.isOpen = true
+         } else {
+            this.loading = false
+            return this.error = "L'adresse e-mail existe déjà dans notre système. Veuillez vous connecter avec cette adresse."
+         }
+         
+       } catch (error) {
+         console.error('Erreur post:', error);
+         console.log("eee",error.response.data.alert);
+         this.loading = false
+         return this.error = "Ce nom d'utilisateur existe déjà! "
+       }
 
+       
+}else{
+ console.log('pas bon' , this.v$.$errors );
+
+}
+   },
     },
 };
 </script>
 
 <style lang="css" scoped>
+
+.form-container {
+  width: 510px;
+  border-radius: 0.75rem;
+  color: black;
+  z-index: 100;
+
+}
+.title {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.title img{
+  width: 90px;
+  height: ç0px;
+
+}
+
+
+small {
+  color: #f8001b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .auth-container {
     width: 100%;
 
@@ -367,4 +523,5 @@ select {
     display: flex;
     flex-direction: column;
   }
-}</style>
+}
+</style>

@@ -5,7 +5,7 @@
             <div class="general">
                 <h1 class="h2 mb2">{{ SujetOne.titre }}</h1>
                 <div class="topic-header__meta">
-                    <a href="/profil/252637" class="topic-header__author forum-message__author">
+                    <a href="/profil/252637" class="topic-header__author">
                         <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: none;">
                             <img :src="SujetOne.user_id.image" alt="" style="width: 100%; height: 100%;">
 
@@ -30,10 +30,18 @@
             <div class="forum-message">
                 <div class="forum-message__body">
                     <div class="js-content formatted formatted">
+                        <!-- <p>Bonjour,</p>
+                        <p><strong>Ce que je veux</strong></p> -->
                         <p>
                             {{ SujetOne.contenu }}
                         </p>
-                       
+                        <!-- <p>Je me suis lancer avec ListingPro mais il n'y a pas la possibilité de gérer les membres par rôle
+                            (marchand, visiteur).<br>
+                            Avez-vous des idées de plugin adapter ?<br>
+                            Je suis en train d'explorer le plugin MemberPress et je me demande si je peux l'associer à
+                            ListingPro.</p>
+                        <p>Merci pour vos suggestions</p>
+                        <p>a+</p> -->
                     </div>
                     <div class="js-forum-edit"></div>
                 </div>
@@ -41,30 +49,24 @@
 
             <div class="mb1">
                 <h2 class="h3 mt3 mb1">
-                    <forum-count v-if="commentsForTopic.length === 0" style="font-weight: bolder;">Aucune  réponse</forum-count>
-                    <forum-count v-else style="font-weight: bolder;">{{ commentsForTopic.length }} réponse</forum-count>
-
+                    <forum-count count="1" style="font-weight: bolder;">1 réponse</forum-count>
                 </h2>
                 <hr>
             </div>
 
-            <div class="forum-messages" >
-                <div class="noresul" v-if="commentsForTopic.length === 0">
-                    Aucun commentaire pour le moment !!!
-                </div>
-
-                <div v-else class="forum-message is-reply " v-for="comment in commentsForTopic" :key="comment.id">
+            <div class="forum-messages">
+                <div class="forum-message is-reply " id="message-139346">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex">
                             <div class="forum-avatar">
-                                <img :src="comment.user_id.image" alt="" class="forum-message__avatar">
+                                <img src="@/assets/image/about-2.jpg" alt="" class="forum-message__avatar">
                             </div>
                             <div class="forum-message__header">
                                 <a href="/profil/305506" class="forum-message__author">
-                                    {{ comment.user_id.nom }}  {{ comment.user_id.prenom }}
+                                    axs
                                 </a>
                                 <div class="forum-message__meta">
-                                    <a href="#message-139346"><time-ago time="1692365782"> , Il y a {{ formatRelativeDate(comment.createdAt) }}</time-ago></a>
+                                    <a href="#message-139346"><time-ago time="1692365782"> , Il y a 4 jours</time-ago></a>
                                     <forum-edit message="139346" owner="305506"></forum-edit>
                                     <forum-delete message="139346" owner="305506"></forum-delete>
                                 </div>
@@ -86,112 +88,62 @@
         </form>
     </div>
 </div>
-
-                       
-                    </div>
+ </div>
 
 
                     <div class="forum-message__body">
                         <div class="formatted card js-content p2">
-                            <p> {{ comment.contenu }}
+                            <p>Ultimate Member ? Je sais pas si ça règle tous tes soucis, mais le plugin vaut le détour =)
                             </p>
-                           
+                            <p>Good luck!</p>
                         </div>
                         <div class="js-forum-edit"></div>
                     </div>
                 </div>
+                <div class="btns" v-if="SujetOne.statut === null  ">
+                    <button class="btn btn-primary " style="background-color: rgb(0, 183, 255);" @click="accepter(SujetOne._id )">Accepter</button>
+                    <button class="btn btn-primary " style="background-color: rgba(243, 39, 39, 0.842);" @click="refuter(  SujetOne._id)">Rejeter</button>
 
-                <forum-create-message>
-                    <form>
-                        <div class="stack">
-                            <div class="form-group "><label for="content">Votre message</label>
-                                <div class="mdeditor">
-                                    <div class="mdeditor__toolbar">
-                                        <div class="mdeditor__toolbarleft">
-
-                                        </div>
-                                        <div class="mdeditor__toolbarright">
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <textarea id="forum_topic_form_content"  class="form-control" v-model="contenu">
-
-                                    </textarea>
-                              <small v-if="v$.contenu.$error && contenu.trim() !== '' ">{{ v$.contenu.$errors[0].$message }}</small>  
-
-                            </div>
-
-                            <button class="btn btn-primary"  @click.prevent="submit">Répondre</button>
-                        </div>
-                    </form>
-                </forum-create-message>
+                </div>
+               
             </div>
 
         </div>
     </div>
     <MazDialog v-model="msgsuccesspost" >
         <p>
-            Votre commentaire a été ajouté
+            Votre sujet a été soumis avec succès aux modérateurs pour examen et validation. Merci de patienter pendant qu'ils le vérifient.
         </p>
-        <template #footer="{ close }">
-
-<div class="supp" @click="close" style="background-color: blue; "> Ok</div>
-
-
-
-</template>
+        <template #footer>
+  
+          <div class="supp" @click="close" style="background-color: blue; "> Ok</div>
+  
+        </template>
       </MazDialog>
 </template>
 
 <script>
-import useVuelidate from '@vuelidate/core';
-import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
 import axios from '@/lib/axiosConfig.js'
-import Loading from '../../components/other/preloader.vue';
+
 import { formatRelativeDate } from '../../lib/dateUtils';
+import Loading from '../../components/other/preloader.vue';
 import MazDialog from 'maz-ui/components/MazDialog'
-import { mapGetters } from 'vuex';
 export default {
     name: 'ForumMffeDetail',
+    components:{ Loading , MazDialog},
     props:['id'],
-      computed: {
-      ...mapGetters(['getUser']),
-  },
-
-    components:{
-    Loading , MazDialog
-  },
 
     data() {
         return {
             SujetOne:'',
-            loading:true,
-             error:'',
-            v$:useVuelidate(), 
-             contenu:'',
-             msgsuccesspost:false,
-             commentsForTopic:[],
-            
-
+            loading:true, 
+            msgsuccesspost:false,
         };
     },
-      validations: {
-      
-    contenu: {
-      require,
-      lgmin: lgmin(5),
-     
-    },
- 
-  },
 
   async  mounted() {
         console.log('id',this.id);
-        console.log('Informations de l\'utilisateur :', this.getUser);
         await this.fetchOneSujet()
-        await this.fetchCommentaireOptions()
 
     },
 
@@ -210,84 +162,66 @@ export default {
          
        } catch (error) {
          console.error('Erreur post:', error);
-        //  console.log("eee",error.response.data.alert);
-        //  return this.error = "Ce nom d'utilisateur existe déjà! "
+    
        }
     },
-
-    async fetchCommentaireOptions() {
-            try {
-
-                await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
-                const allComments = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
-                this.commentsForTopic = allComments.data.filter(comment => comment.sujet_id._id === this.id);
-                console.log('options',allComments)
-                console.log('Commentaires pour le sujet', this.commentsForTopic);
-                
-
-              
-            } catch (error) {
-                console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
-            }
-        },
-     async submit() {
-       
-       this.v$.$touch()
-       this.error = ''
-       if (this.v$.$errors.length == 0 ) {
-        this.loading = true
-       
-         let DataUser = {
-         contenu: this.contenu,
-         user_id:this.getUser.user.id,
-         sujet_id:this.id
-                 
-       }
-       console.log('datauser', DataUser);
-   
-       try {
-      const response = await axios.post('/commentaire', DataUser);
-  
+   async accepter(id){
+    this.loading = true
+    console.log('id',id);
+    try {
+      const response = await axios.put(`/sujet/${ this.id}` , {statut:1});
       console.log('response.login', response); 
       if (response.data.statut === "success") {
         console.log(response.data);
-        this.contenu = ''
-        await this.fetchCommentaireOptions()
-       this.loading = false
-       this.msgsuccesspost = true
-       
+        this.loading = false
+        this.msgsuccesspost = true 
+         
+        
           } else {
+        
           return this.error = response.data.alert
           
           }
       
-            } catch (error) {
-            return this.error = "L'authentification a échoué"
-            }
-       
-         }else{
-        console.log('pas bon' , this.v$.$errors );
+    } catch (error) {
+       return this.error = "L'authentification a échoué"
+    }
+    },
+    async refuter(id){
+        this.loading = true
+     console.log('id',id);
+     try {
+        const response = await axios.put(`/sujet/${ this.id}`, {statut:0});
+      console.log('response.login', response); 
+      if (response.data.statut === "success") {
+        console.log(response.data);
+        this.loading = false
+        this.msgsuccesspost = true
+         
+        
+          } else {
+        
+          return this.error = response.data.alert
+          
+          }
+      
+    } catch (error) {
+       return this.error = "L'authentification a échoué"
+    }
+    },
+    close(){
+    this.msgsuccesspost = false
+    this.$router.push('/moderatrice');
 
-        }
-   },
+}
 
     },
 };
 </script>
 
 <style lang="css" scoped>
-.noresul {
-    border: 1px solid var(--vert);
-    max-width: 1140px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px;
-    border-radius: 6px;
-    font-size: 20px;
-  
-  }
+
+
 .supp {
   font-size: 15px;
   font-weight: 500;
@@ -303,12 +237,6 @@ export default {
   align-items: center;
   justify-content: center;
   margin: 0 5px;
-}
-small {
-  color: #f8001b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .general {
 
@@ -938,6 +866,12 @@ label {
     /* min-height: 48px; */
 }
 
+.btns{
 
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: space-evenly;
+
+}
 
 </style>

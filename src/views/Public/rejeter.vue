@@ -14,7 +14,7 @@
         <main class="forum-page__main stack"  style="max-width: 1140px; margin: 20px auto; padding: 10px;">
             <h2 style="    font-size: 22px;
     font-weight: bolder;">sujet(s) Rejété(s)</h2>
-        <div v-if="sujetsAvecStatutNull.length === 0">
+        <div v-if="sujetsAvecStatutNull.length === 0" class="noresul">   
 
           <p>aucun sujet postuler pour l'instant</p>
         </div>
@@ -113,6 +113,18 @@ width: 100%;
 height: 100vh;
 background-color: var(--blanc);
     }
+    .noresul {
+    border: 1px solid var(--vert);
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    border-radius: 6px;
+    font-size: 20px;
+  
+  }
     .page-header {
     position: relative;
     background-position: center;

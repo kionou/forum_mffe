@@ -1,6 +1,6 @@
 <template>
-     <Loading v-if="loading"></Loading>
-    <div class=""  v-if="SujetOne">
+    <Loading v-if="loading"></Loading>
+    <div class="" v-if="SujetOne">
         <div class="page-header  topic-header ">
             <div class="general">
                 <h1 class="h2 mb2">{{ SujetOne.titre }}</h1>
@@ -10,14 +10,15 @@
                             <img :src="SujetOne.user_id.image" alt="" style="width: 100%; height: 100%;">
 
                         </div>
-                        {{ SujetOne.user_id.nom }}  {{ SujetOne.user_id.prenom }}
+                        {{ SujetOne.user_id.nom }} {{ SujetOne.user_id.prenom }}
                     </a>
-                    <small class="topic-header__date"><time-ago >Il y a  {{ formatRelativeDate(SujetOne.createdAt) }} </time-ago>
+                    <small class="topic-header__date"><time-ago>Il y a {{ formatRelativeDate(SujetOne.createdAt) }}
+                        </time-ago>
                     </small>
                     <div class="topic-header__tags">
                         <div class="interet">
 
-                            <p>{{ SujetOne.centre_id.nom}}</p>
+                            <p>{{ SujetOne.centre_id.nom }}</p>
                         </div>
                     </div>
                 </div>
@@ -33,7 +34,7 @@
                         <p>
                             {{ SujetOne.contenu }}
                         </p>
-                       
+
                     </div>
                     <div class="js-forum-edit"></div>
                 </div>
@@ -41,14 +42,15 @@
 
             <div class="mb1">
                 <h2 class="h3 mt3 mb1">
-                    <forum-count v-if="commentsForTopic.length === 0" style="font-weight: bolder;">Aucune  réponse</forum-count>
-                    <forum-count v-else style="font-weight: bolder;">{{ commentsForTopic.length }} réponse</forum-count>
+                    <forum-count v-if="commentsForTopic.length === 0" style="font-weight: bolder;">Aucune
+                        réponse</forum-count>
+                    <forum-count v-else style="font-weight: bolder;">{{ commentsForTopic.length }} réponse(s)</forum-count>
 
                 </h2>
                 <hr>
             </div>
 
-            <div class="forum-messages" >
+            <div class="forum-messages">
                 <div class="noresul" v-if="commentsForTopic.length === 0">
                     Aucun commentaire pour le moment !!!
                 </div>
@@ -61,33 +63,38 @@
                             </div>
                             <div class="forum-message__header">
                                 <a href="/profil/305506" class="forum-message__author">
-                                    {{ comment.user_id.nom }}  {{ comment.user_id.prenom }}
+                                    {{ comment.user_id.nom }} {{ comment.user_id.prenom }}
                                 </a>
                                 <div class="forum-message__meta">
-                                    <a href="#message-139346"><time-ago time="1692365782"> , Il y a {{ formatRelativeDate(comment.createdAt) }}</time-ago></a>
+                                    <a href="#message-139346"><time-ago time="1692365782"> , Il y a {{
+                                        formatRelativeDate(comment.createdAt) }}</time-ago></a>
                                     <forum-edit message="139346" owner="305506"></forum-edit>
                                     <forum-delete message="139346" owner="305506"></forum-delete>
                                 </div>
-                               
+
                             </div>
                         </div>
-                        <div class="icon1 dropdown">
-    <div class=" icone" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-exclamation-octagon"></i>
-    </div>
-    <div class="dropdown-menu"  aria-labelledby="dropdownMenuButton1">
-        <form class="forum-report__form stack">
-            <div class="form-group">
-                <label for="reason">Raison du signalement</label>
-                <textarea name="reason" id="reason" type="textarea" required="" style="min-height: 200px;"
-                    placeholder="Indiquez en quoi ce sujet ne convient pas" autofocus=""></textarea>
-            </div>
-            <button class="btn btn-primary">Envoyer</button>
-        </form>
-    </div>
-</div>
+                        <div class="icon1 ">
+                            <div class=" icone" id="dropdownMenuButton1"   @click="toggleDropdown">
+                                <i class="bi bi-exclamation-octagon"></i>
+                            </div>
+                            <div class=""  v-if="isDropdownVisible">
+                                <form class="forum-report__form stack">
+                                    <div class="form-group">
+                                        <label for="reason">Raison du signalement</label>
+                                        <textarea name="reason" id="reason" type="textarea" style="min-height: 200px;"
+                                            placeholder="Indiquez en quoi ce sujet ne convient pas"
+                                            v-model="step2.contenu"></textarea>
+                                        <small v-if="v$.step2.contenu.$error && step2.contenu.trim() !== ''">{{
+                                            v$.step2.contenu.$errors[0].$message }}</small>
+                                    </div>
+                                    <button class="btn btn-primary"
+                                        @click.prevent="HamdleSignaler(comment._id)">Envoyer</button>
+                                </form>
+                            </div>
+                        </div>
 
-                       
+
                     </div>
 
 
@@ -95,7 +102,7 @@
                         <div class="formatted card js-content p2">
                             <p> {{ comment.contenu }}
                             </p>
-                           
+
                         </div>
                         <div class="js-forum-edit"></div>
                     </div>
@@ -116,14 +123,14 @@
                                     </div>
 
                                 </div>
-                                <textarea id="forum_topic_form_content"  class="form-control" v-model="contenu">
+                                <textarea id="forum_topic_form_content" class="form-control" v-model="step1.contenu">
 
                                     </textarea>
-                              <small v-if="v$.contenu.$error && contenu.trim() !== '' ">{{ v$.contenu.$errors[0].$message }}</small>  
-
+                                <small v-if="v$.step1.contenu.$error && step1.contenu.trim() !== ''">{{ v$.step1.contenu.$errors[0].$message }}</small>
+                             
                             </div>
 
-                            <button class="btn btn-primary"  @click.prevent="submit">Répondre</button>
+                            <button class="btn btn-primary" @click.prevent="submit">Répondre</button>
                         </div>
                     </form>
                 </forum-create-message>
@@ -131,23 +138,20 @@
 
         </div>
     </div>
-    <MazDialog v-model="msgsuccesspost" >
+    <MazDialog v-model="msgsuccesspost">
         <p>
             Votre commentaire a été ajouté
         </p>
         <template #footer="{ close }">
 
-<div class="supp" @click="close" style="background-color: blue; "> Ok</div>
-
-
-
-</template>
-      </MazDialog>
+            <div class="supp" @click="close" style="background-color: blue; "> Ok</div>
+        </template>
+    </MazDialog>
 </template>
 
 <script>
 import useVuelidate from '@vuelidate/core';
-import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
+import { require, lgmin, lgmax, ValidEmail, ValidNumeri } from '@/functions/rules';
 import axios from '@/lib/axiosConfig.js'
 import Loading from '../../components/other/preloader.vue';
 import { formatRelativeDate } from '../../lib/dateUtils';
@@ -155,123 +159,186 @@ import MazDialog from 'maz-ui/components/MazDialog'
 import { mapGetters } from 'vuex';
 export default {
     name: 'ForumMffeDetail',
-    props:['id'],
-      computed: {
-      ...mapGetters(['getUser']),
-  },
+    props: ['id'],
+    computed: {
+        ...mapGetters(['getUser']),
+    },
 
-    components:{
-    Loading , MazDialog
-  },
+    components: {
+        Loading, MazDialog
+    },
 
     data() {
         return {
-            SujetOne:'',
-            loading:true,
-             error:'',
-            v$:useVuelidate(), 
-             contenu:'',
-             msgsuccesspost:false,
-             commentsForTopic:[],
-            
+            SujetOne: '',
+            loading: true,
+            error: '',
+            v$: useVuelidate(),
+            msgsuccesspost: false,
+            commentsForTopic: [],
+            isDropdownVisible: false,
+            step1: {
+                contenu: '',
+            },
+            step2: {
+                contenu: '',
+            },
+
 
         };
     },
-      validations: {
-      
-    contenu: {
-      require,
-      lgmin: lgmin(5),
-     
+    validations: {
+        step1: {
+            contenu: {
+                require,
+                lgmin: lgmin(2),
+
+            },
+        },
+        step2: {
+            contenu: {
+                require,
+                lgmin: lgmin(2),
+
+            },
+        }
     },
- 
-  },
+
+
+
 
   async  mounted() {
-        console.log('id',this.id);
-        console.log('Informations de l\'utilisateur :', this.getUser);
-        await this.fetchOneSujet()
-        await this.fetchCommentaireOptions()
+    console.log('id', this.id);
+    console.log('Informations de l\'utilisateur :', this.getUser);
+    await this.fetchOneSujet()
+    await this.fetchCommentaireOptions()
+  
 
-    },
+},
 
-    methods: {
-        formatRelativeDate:formatRelativeDate,
+methods: {
+    formatRelativeDate: formatRelativeDate,
         async fetchOneSujet(){
-      try {
-         const response = await axios.get(`/sujet/${ this.id}`);
-         console.log('response.sousprefecture', response);
-         if (response.data.statut === 'success') {
-          this.SujetOne = response.data.data
-          this.loading = false
-         } else {
-          
-         }
-         
-       } catch (error) {
-         console.error('Erreur post:', error);
-        //  console.log("eee",error.response.data.alert);
-        //  return this.error = "Ce nom d'utilisateur existe déjà! "
-       }
+        try {
+            const response = await axios.get(`/sujet/${this.id}`);
+            console.log('response.sousprefecture', response);
+            if (response.data.statut === 'success') {
+                this.SujetOne = response.data.data
+                this.loading = false
+            } else {
+
+            }
+
+        } catch (error) {
+            console.error('Erreur post:', error);
+            //  console.log("eee",error.response.data.alert);
+            //  return this.error = "Ce nom d'utilisateur existe déjà! "
+        }
     },
 
     async fetchCommentaireOptions() {
-            try {
+        try {
 
-                await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
-                const allComments = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
+            await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
+            const allComments = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
+            console.log('optionszzz', allComments)
+            if (allComments && allComments.data) {
                 this.commentsForTopic = allComments.data.filter(comment => comment.sujet_id._id === this.id);
-                console.log('options',allComments)
                 console.log('Commentaires pour le sujet', this.commentsForTopic);
-                
+            } else {
+                console.log('Aucun commentaire disponible.');
+            }
 
-              
-            } catch (error) {
-                console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
-            }
-        },
+        } catch (error) {
+            console.error('Erreur lors de la récupération des options des commentaire:', error.message);
+        }
+    },
      async submit() {
-       
-       this.v$.$touch()
-       this.error = ''
-       if (this.v$.$errors.length == 0 ) {
-        this.loading = true
-       
-         let DataUser = {
-         contenu: this.contenu,
-         user_id:this.getUser.user.id,
-         sujet_id:this.id
-                 
-       }
-       console.log('datauser', DataUser);
-   
-       try {
-      const response = await axios.post('/commentaire', DataUser);
-  
-      console.log('response.login', response); 
-      if (response.data.statut === "success") {
-        console.log(response.data);
-        this.contenu = ''
-        await this.fetchCommentaireOptions()
-       this.loading = false
-       this.msgsuccesspost = true
-       
-          } else {
-          return this.error = response.data.alert
-          
-          }
-      
-            } catch (error) {
-            return this.error = "L'authentification a échoué"
+
+        this.error = ''
+        this.v$.step1.$touch()
+        if (this.v$.$errors.length == 0) {
+            this.loading = true
+
+            let DataUser = {
+                contenu: this.step1.contenu,
+                user_id: this.getUser.user.id,
+                sujet_id: this.id
+
             }
-       
-         }else{
-        console.log('pas bon' , this.v$.$errors );
+            console.log('datauser', DataUser);
+
+            try {
+                const response = await axios.post('/commentaire', DataUser);
+
+                console.log('response.login', response);
+                if (response.data.statut === "success") {
+                    console.log(response.data);
+                    this.step1.contenu = ''
+                    await this.fetchCommentaireOptions()
+                    this.loading = false
+                    this.msgsuccesspost = true
+
+                } else {
+                    return this.error = response.data.alert
+
+                }
+
+            } catch (error) {
+                return this.error = "L'authentification a échoué"
+            }
+
+        } else {
+            console.log('pas bon', this.v$.$errors);
 
         }
-   },
-
     },
+    toggleDropdown() {
+    this.isDropdownVisible = !this.isDropdownVisible;
+  },
+
+async HamdleSignaler(id){
+        this.error = ''
+        this.v$.step2.$touch()
+        if (this.v$.$errors.length == 0) {
+            this.$refs.reportDropdown.classList.remove('show');
+            // this.loading = true
+
+            let DataUser = {
+                contenu: this.step2.contenu,
+                user_id: this.getUser.user.id,
+                commentaire_id: id
+
+            }
+            console.log('datauser', DataUser);
+
+            // try {
+            //     const response = await axios.post('/signaler', DataUser);
+
+            //     console.log('response.login', response);
+            //     if (response.data.statut === "success") {
+            //         console.log(response.data);
+            //         this.contenu = ''
+            //         await this.fetchCommentaireOptions()
+            //         this.loading = false
+            //         this.msgsuccesspost = true
+
+            //     } else {
+            //         return this.error = response.data.alert
+
+            //     }
+
+            // } catch (error) {
+            //     return this.error = "L'authentification a échoué"
+            // }
+
+        } else {
+            console.log('pas bon', this.v$.$errors);
+
+        }
+
+    }
+},
 };
 </script>
 
@@ -286,30 +353,33 @@ export default {
     padding: 50px;
     border-radius: 6px;
     font-size: 20px;
-  
-  }
+
+}
+
 .supp {
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
-  border: none;
-  border-radius: 45px;
-  z-index: 3;
-  cursor: pointer;
-  outline: none;
-  width: 100px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 5px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    border: none;
+    border-radius: 45px;
+    z-index: 3;
+    cursor: pointer;
+    outline: none;
+    width: 100px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
 }
+
 small {
-  color: #f8001b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    color: #f8001b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .general {
 
     width: 100%;
@@ -917,6 +987,7 @@ label {
     transform: scale(1.1);
 
 }
+
 .forum-report__form {
     top: 100%;
     position: absolute;
@@ -926,7 +997,12 @@ label {
     right: 0;
     width: 300px;
 }
-.form-group input, .form-group select, .form-group textarea, .ts-dropdown .dropdown-input, .ts-input {
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.ts-dropdown .dropdown-input,
+.ts-input {
     /* border: 1px solid var(--vert); */
     background: var(--bg);
     border-radius: 3px;
@@ -936,8 +1012,4 @@ label {
     width: 100%;
     outline: 0;
     /* min-height: 48px; */
-}
-
-
-
-</style>
+}</style>

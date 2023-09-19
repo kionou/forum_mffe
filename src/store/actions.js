@@ -35,10 +35,27 @@ import axios from '@/lib/axiosConfig.js'
         }
       },
 
-
-
-
-
+      async fetchUserData({ commit }) {
+        try {
+          const response = await axios.get('/users/all-users');
+          const data = response.data; 
+          console.log('SET_USERS_DATA', data);
+          commit('SET_USERS_DATA', data);
+        } catch (error) {
+          console.error('Erreur lors de la récupération des users :', error);
+        }
+      },  
+      
+      async fetchAbonnerData({ commit }) {
+        try {
+          const response = await axios.get('/abonner');
+          const data = response.data; 
+          console.log('SET_ABONNER_DATA', data);
+          commit('SET_ABONNER_DATA', data);
+        } catch (error) {
+          console.error('Erreur lors de la récupération des abonner :', error);
+        }
+      },
 
 
 }

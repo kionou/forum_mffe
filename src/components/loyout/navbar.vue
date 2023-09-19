@@ -34,7 +34,10 @@
       <div  v-if="getUser" >
           <div class="btnCt "  role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 130px;">
         <i class="bi bi-person-fill"></i>
-          <span> Mon compte </span>
+          <span v-if="getUser.user.statut === 'M'"> Moderateur</span>
+          <span v-else-if="getUser.user.statut === 'L'"> Lambda</span>
+          <span v-else-if="getUser.user.statut === 'I'"> Influent</span>
+
           
        </div>
                 <ul class="dropdown-menu menu"  >

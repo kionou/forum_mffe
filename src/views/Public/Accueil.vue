@@ -5,22 +5,31 @@
        </div>
        <div class="content">
 
-        <h2>description.titre</h2>
-        <p>description.corps</p>
+        <h2>BIENVENUE A e-FEMME</h2>
+        <p>
+          e-Femme est un forum en ligne dédié à la promotion des valeurs de la femme. 
+          Dans un monde où les réseaux sociaux peuvent parfois être le terrain des influences négatives, 
+          e-Femme se veut une oasis de positivité et d'inspiration.
+        </p>
         <div class="content-card">
           <div class="card">
             <div class="image">
               <img src="@/assets/image/vision.jpg" alt="vision">
             </div>
-            <h4>description.vision_titre</h4>
-            <p>description.vision_corps </p>
+            <h4>Notre vision</h4>
+            <p> Créer un monde en ligne où chaque femme a la possibilité de s'exprimer librement. </p>
           </div>
           <div class="card">
             <div class="image">
               <img src="@/assets/image/mission1.jpg" alt="mission">
             </div>
-            <h4>description.mission_titre</h4>
-            <p>description.mission_corps</p>
+            <h4>Nos missions</h4>
+            <p>
+              <!-- Fournir un forum virtuel sécurisé et bienveillant où les femmes peuvent se rassembler pour échanger des idées, 
+              promouvoir des valeurs positives, et s'engager dans des discussions constructives -->
+              Créer un espace virtuel pour les femmes afin qu'elles partagent des 
+              idées positives et s'engagent dans des discussions constructives.
+            </p>
 
           </div> 
          
@@ -28,8 +37,8 @@
             <div class="image">
               <img src="@/assets/image/goal.svg" alt="valeur">
             </div>
-            <h4>description.valeur_titre</h4>
-            <p>description.valeur_corps</p>
+            <h4>Nos valeurs</h4>
+            <p>Respect, inclusion, solidarité, égalité, bienveillance, diversité, responsabilité, éducation, intégrité.</p>
           </div>
         </div>
       </div>

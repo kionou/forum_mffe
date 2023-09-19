@@ -12,11 +12,11 @@
             <span>{{ nbretotal }}</span>
         </div>
         <div class="name">
-            Sujets total
+            Sujet(s) publié(s)
         </div>
         </div>   
         <div class="iconss">
-          <i class='bx bxs-user'></i>
+        <i class='bx bx-message-rounded'></i>
         </div>
       </div>
     </div>
@@ -28,11 +28,11 @@
             <span>{{ nbreaccepter }}</span>
         </div>
         <div class="name">
-           Postuler
+          Sujet(s) postulé(s)
         </div>
         </div>   
         <div class="iconss">
-          <i class='bx bxs-user'></i>
+        <i class='bx bx-message-rounded-check'></i>
         </div>
       </div>
     </div>
@@ -44,20 +44,20 @@
             <span>{{ nbrerejeter }}</span>
         </div>
         <div class="name">
-            Refuser
+            Sujet(s) rejeté(s)
         </div>
         </div>   
         <div class="iconss">
-          <i class='bx bxs-user'></i>
+        <i class='bx bx-message-rounded-x'></i>
         </div>
       </div>
     </div>
         </div>
 
-        <main class="forum-page__main stack"  style=" padding: 10px; background: #fff">
+        <main class="forum-page__main stack"  style=" padding: 10px; background: #fff" >
             <h2 style="    font-size: 22px;
-    font-weight: bolder;">Nouveau(x) sujet(s)</h2>
-        <div v-if="sujetsAvecStatutNull.length === 0">
+            font-weight: bolder;">Nouveau(x) sujet(s)</h2>
+        <div v-if="sujetsAvecStatutNull.length === 0" >
             <div class="noresul">
           <p>aucun sujet postulé pour l'instant</p>
             </div>
@@ -66,10 +66,10 @@
         
         <div class="cadre" v-else  v-for="sujet in sujetsAvecStatutNull" :key="sujet.id" @click="$router.push({ path: `/moderatrice/sujet/${sujet._id}`, })" >
           <div class="cadre_header">
-            <div class="image">
+            <div class="image" v-if="sujet.user_id">
               <img :src="sujet.user_id.image" alt="">
             </div>
-            <div class="nom">
+            <div class="nom" v-if="sujet.user_id">
               <p> {{sujet.user_id.nom }} {{sujet.user_id.prenom}} , <span>il y'a, {{formatRelativeDate(sujet.createdAt) }}</span> </p>
             </div>
           </div>
@@ -80,7 +80,7 @@
             <p> {{sujet.centre_id.nom}} </p>
           </div>
           <div class="icon">
-            <i class="bi bi-chat-dots"></i> <span>1</span>
+            <i class="bi bi-chat-dots"></i> <span></span>
           </div>
         </div>
 
@@ -98,8 +98,12 @@
 import io from 'socket.io-client';
 import { formatRelativeDate } from '../../lib/dateUtils';
 import Loading from '../../components/other/preloader.vue';
+import { mapGetters } from 'vuex';
 export default {
     name: 'ForumMffeModeratrice',
+    computed: {
+      ...mapGetters(['getUser']),
+  },
      components:{ Loading},
 
 
@@ -124,6 +128,7 @@ export default {
         //         console.log('data',DataUser);
         // });
         await this.fetchCentreOptions()
+        console.log('Informations de l\'utilisateur :', this.getUser);
     },
 
     methods: {
@@ -141,6 +146,8 @@ export default {
                 this.CentreOptions = options.data;
                 this.SujetOptions = option.data
                 this.sujetsAvecStatutNull = option.data.filter(sujet => sujet.statut === null);
+                console.log('Options centre:', this.sujetsAvecStatutNull);
+
                 this.nbreaccepter = option.data.filter(sujet => sujet.statut === "1").length;
                 this.nbrerejeter  = option.data.filter(sujet => sujet.statut === "0").length;
                  this.nbretotal =  option.data.length

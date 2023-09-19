@@ -4,67 +4,31 @@
       <div class="forum-page bg py3">
        
         <main class="forum-page__main stack">
-        <router-link to="/detail">
-          <div class="cadre">
-            <div class="cadre_header">
-              <div class="image">
-                <img src="@/assets/image/about-2.jpg" alt="">
-              </div>
-              <div class="nom">
-                <p>Kionou, <span>il y'a 3jours</span> </p>
-              </div>
-            </div>
-            <div class="cadre_text">
-              <h2>Avoir la durée d'un vidéo</h2>
-            </div>
-            <div class="interet">
-              <p>sante</p>
-            </div>
-            <div class="icon">
-              <i class="bi bi-chat-dots"></i> <span>1</span>
-            </div>
-          </div>
-        </router-link>
-          
-          <div class="cadre">
-            <div class="cadre_header">
-              <div class="image">
-                <img src="@/assets/image/about-2.jpg" alt="">
-              </div>
-              <div class="nom">
-                <p>Kionou, <span>il y'a 3jours</span> </p>
-              </div>
-            </div>
-            <div class="cadre_text">
-              <h2>Avoir la durée d'un vidéo</h2>
-            </div>
-            <div class="interet">
-              <p>sante</p>
-            </div>
-            <div class="icon">
-              <i class="bi bi-chat-dots"></i> <span>1</span>
-            </div>
-          </div>
-  
-          <div class="cadre">
-            <div class="cadre_header">
-              <div class="image">
-                <img src="@/assets/image/about-2.jpg" alt="">
-              </div>
-              <div class="nom">
-                <p>Kionou, <span>il y'a 3jours</span> </p>
-              </div>
-            </div>
-            <div class="cadre_text">
-              <h2>Avoir la durée d'un vidéo</h2>
-            </div>
-            <div class="interet">
-              <p>sante</p>
-            </div>
-            <div class="icon">
-              <i class="bi bi-chat-dots"></i> <span>1</span>
-            </div>
-          </div>
+          <div class="noresul" v-if="topicsPostes.length === 0">
+
+<p>aucun sujet postuler pour l'instant</p>
+</div>
+
+
+<div class="cadre" v-else  v-for="sujet in topicsPostes" :key="sujet.id" @click="$router.push({ path: `/forum/${sujet._id}`, })" >
+<div class="cadre_header">
+  <div class="image" v-if="sujet.user_id">
+    <img :src="sujet.user_id.image" alt="">
+  </div>
+  <div class="nom" v-if="sujet.user_id">
+    <p>{{ sujet.user_id.nom }} {{ sujet.user_id.prenom }}, <span>il y'a,{{formatRelativeDate(sujet.createdAt) }}</span> </p>
+  </div>
+</div>
+<div class="cadre_text">
+  <h2>{{ sujet.titre }}</h2>
+</div>
+<div class="interet">
+  <p>{{ sujet.centre_id.nom }}</p>
+</div>
+<div class="icon">
+  <i class="bi bi-chat-dots"></i> <span>{{ commentaire(sujet._id) }}</span>
+</div>
+</div>
   
   
   
@@ -78,27 +42,99 @@
   </template>
   
   <script>
-  export default {
-    name: 'ForumMffeForum',
-  
-    data() {
-      return {
-  
-      };
-    },
-  
-    mounted() {
-  
-    },
-  
-    methods: {
-  
-    },
+
+import { formatRelativeDate } from '@/lib/dateUtils';
+import { mapGetters } from 'vuex';
+ 
+
+export default {
+name: 'ForumMffeForum',
+computed: {
+      ...mapGetters(['getUser']),
+  },
+
+
+data() {
+  return {
+    CentreOptions:[],
+    SujetOptions:[],
+    commentsForTopic:[],
+    nbreComment:'',
+  inscriptionDuration:'',
+  loading:true,
+  topicsPostes: [],
   };
+},
+
+async mounted() {
+await this.fetchCommentaireOptions()
+await this.fetchCentreOptions()
+console.log('Informations de l\'utilisateur :', this.getUser);
+
+
+
+
+},
+
+methods: {
+  formatRelativeDate:formatRelativeDate,
+  commentaire(id){
+    return  this.nbreComment = this.commentsForTopic.data.filter(comment => comment.sujet_id._id === id).length;
+  },
+  async fetchCommentaireOptions() {
+          try {
+
+              await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
+              this.commentsForTopic = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
+              console.log('options',this.commentsForTopic)
+              
+              
+
+            
+          } catch (error) {
+              console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
+          }
+      },
+
+  async fetchCentreOptions() {
+          try {
+
+              await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
+              const options = JSON.parse(JSON.stringify(this.$store.getters['getCentreData']));
+
+              await this.$store.dispatch('fetchSujetData'); // Action spécifique aux bourses
+              const option = JSON.parse(JSON.stringify(this.$store.getters['getSujetData']));
+              const utilisateurConnecteId = this.getUser.user.id;
+              this.CentreOptions = options.data;
+
+              // Filtrer les sujets postés par l'utilisateur connecté
+              this.topicsPostes = option.data.filter(sujet => sujet.statut === "1" && sujet.user_id._id === utilisateurConnecteId);
+               console.log('Options centre:',  this.topicsPostes);
+
+              this.loading = false;
+          } catch (error) {
+              console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
+          }
+      },
+ 
+},
+
+};
   </script>
   
   <style lang="css" scoped>
-
+.noresul {
+    border: 1px solid var(--vert);
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    border-radius: 6px;
+    font-size: 20px;
+  
+  }
   
   .container,
   .course-top-sidebar,

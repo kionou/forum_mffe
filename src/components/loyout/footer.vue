@@ -21,7 +21,7 @@
     <!-- =============== 1.9 Contact Area End ====================-->
     <!-- =============== 1.9 Footer Area Start ====================-->
     <footer>
-        <p>Copyright &copy; 2019 All Rights Reserved.</p>
+        <p>Copyright &copy; 2023 All Rights Reserved.</p>
     </footer>
     </div>
 </template>

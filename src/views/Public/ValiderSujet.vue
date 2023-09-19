@@ -30,18 +30,10 @@
             <div class="forum-message">
                 <div class="forum-message__body">
                     <div class="js-content formatted formatted">
-                        <!-- <p>Bonjour,</p>
-                        <p><strong>Ce que je veux</strong></p> -->
                         <p>
                             {{ SujetOne.contenu }}
                         </p>
-                        <!-- <p>Je me suis lancer avec ListingPro mais il n'y a pas la possibilité de gérer les membres par rôle
-                            (marchand, visiteur).<br>
-                            Avez-vous des idées de plugin adapter ?<br>
-                            Je suis en train d'explorer le plugin MemberPress et je me demande si je peux l'associer à
-                            ListingPro.</p>
-                        <p>Merci pour vos suggestions</p>
-                        <p>a+</p> -->
+                       
                     </div>
                     <div class="js-forum-edit"></div>
                 </div>
@@ -49,24 +41,30 @@
 
             <div class="mb1">
                 <h2 class="h3 mt3 mb1">
-                    <forum-count count="1" style="font-weight: bolder;">1 réponse</forum-count>
+                    <forum-count v-if="commentsForTopic.length === 0" style="font-weight: bolder;">Aucune  réponse</forum-count>
+                    <forum-count v-else style="font-weight: bolder;">{{ commentsForTopic.length }} réponse(s)</forum-count>
+
                 </h2>
                 <hr>
             </div>
 
-            <div class="forum-messages">
-                <div class="forum-message is-reply " id="message-139346">
+            <div class="forum-messages" >
+                <div class="noresul" v-if="commentsForTopic.length === 0">
+                    Aucun commentaire pour le moment !!!
+                </div>
+
+                <div v-else class="forum-message is-reply " v-for="comment in commentsForTopic" :key="comment.id">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex">
                             <div class="forum-avatar">
-                                <img src="@/assets/image/about-2.jpg" alt="" class="forum-message__avatar">
+                                <img :src="comment.user_id.image" alt="" class="forum-message__avatar">
                             </div>
                             <div class="forum-message__header">
                                 <a href="/profil/305506" class="forum-message__author">
-                                    axs
+                                    {{ comment.user_id.nom }}  {{ comment.user_id.prenom }}
                                 </a>
                                 <div class="forum-message__meta">
-                                    <a href="#message-139346"><time-ago time="1692365782"> , Il y a 4 jours</time-ago></a>
+                                    <a href="#message-139346"><time-ago time="1692365782"> , Il y a {{ formatRelativeDate(comment.createdAt) }}</time-ago></a>
                                     <forum-edit message="139346" owner="305506"></forum-edit>
                                     <forum-delete message="139346" owner="305506"></forum-delete>
                                 </div>
@@ -88,31 +86,69 @@
         </form>
     </div>
 </div>
- </div>
+
+                       
+                    </div>
 
 
                     <div class="forum-message__body">
                         <div class="formatted card js-content p2">
-                            <p>Ultimate Member ? Je sais pas si ça règle tous tes soucis, mais le plugin vaut le détour =)
+                            <p> {{ comment.contenu }}
                             </p>
-                            <p>Good luck!</p>
+                           
                         </div>
                         <div class="js-forum-edit"></div>
                     </div>
                 </div>
-                <div class="btns" v-if="SujetOne.statut === null  ">
-                    <button class="btn btn-primary " style="background-color: rgb(0, 183, 255);" @click="accepter(SujetOne._id )">Accepter</button>
-                    <button class="btn btn-primary " style="background-color: rgba(243, 39, 39, 0.842);" @click="refuter(  SujetOne._id)">Rejeter</button>
 
-                </div>
-               
+                <forum-create-message v-if="SujetOne.statut === '1' ">
+                    <form>
+                        <div class="stack">
+                            <div class="form-group "><label for="content">Votre message</label>
+                                <div class="mdeditor">
+                                    <div class="mdeditor__toolbar">
+                                        <div class="mdeditor__toolbarleft">
+
+                                        </div>
+                                        <div class="mdeditor__toolbarright">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <textarea id="forum_topic_form_content"  class="form-control" v-model="contenu">
+
+                                    </textarea>
+                              <small v-if="v$.contenu.$error && contenu.trim() !== '' ">{{ v$.contenu.$errors[0].$message }}</small>  
+
+                            </div>
+
+                            <button class="btn btn-primary"  @click.prevent="submit">Répondre</button>
+                        </div>
+                    </form>
+                </forum-create-message>
             </div>
 
         </div>
     </div>
+                <div class="btns" v-if="SujetOne.statut === null ">
+                    <button class="btn btn-primary " style="background-color: rgb(0, 183, 255);" @click="accepter(SujetOne._id )">Accepter</button>
+                    <button class="btn btn-primary " style="background-color: rgba(243, 39, 39, 0.842);" @click="refuter(  SujetOne._id)">Rejeter</button>
+                </div>
     <MazDialog v-model="msgsuccesspost" >
         <p>
-            Votre sujet a été soumis avec succès aux modérateurs pour examen et validation. Merci de patienter pendant qu'ils le vérifient.
+           Sujet publié
+        </p>
+        <template #footer>
+  
+          <div class="supp" @click="close" style="background-color: blue; "> Ok</div>
+  
+        </template>
+      </MazDialog>
+
+      <MazDialog v-model="msgsrejetepost" >
+        <p>
+           Sujet rejeté
         </p>
         <template #footer>
   
@@ -126,24 +162,46 @@
 import axios from '@/lib/axiosConfig.js'
 
 import { formatRelativeDate } from '../../lib/dateUtils';
+import useVuelidate from '@vuelidate/core';
+import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
 import Loading from '../../components/other/preloader.vue';
 import MazDialog from 'maz-ui/components/MazDialog'
+import { mapGetters } from 'vuex';
 export default {
     name: 'ForumMffeDetail',
     components:{ Loading , MazDialog},
     props:['id'],
+    computed: {
+      ...mapGetters(['getUser']),
+  },
 
     data() {
         return {
             SujetOne:'',
             loading:true, 
             msgsuccesspost:false,
+            msgsrejetepost:false,
+            error:'',
+            v$:useVuelidate(), 
+             contenu:'',
+             commentsForTopic:[],
         };
+    },
+    validations: {
+      
+      contenu: {
+        require,
+        lgmin: lgmin(5),
+       
+      },
+   
     },
 
   async  mounted() {
-        console.log('id',this.id);
+    console.log('id',this.id);
+        console.log('Informations de l\'utilisateur :', this.getUser);
         await this.fetchOneSujet()
+        await this.fetchCommentaireOptions()
 
     },
 
@@ -165,6 +223,65 @@ export default {
     
        }
     },
+    async fetchCommentaireOptions() {
+            try {
+
+                await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
+                const allComments = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
+                console.log('optionszzz',allComments)
+              if (allComments && allComments.data) {
+                this.commentsForTopic = allComments.data.filter(comment => comment.sujet_id._id === this.id);
+                console.log('Commentaires pour le sujet', this.commentsForTopic);
+                } else {
+                console.log('Aucun commentaire disponible.');
+                }
+ 
+            } catch (error) {
+                console.error('Erreur lors de la récupération des options des commentaire:', error.message);
+            }
+        },
+     async submit() {
+       
+       this.v$.$touch()
+       this.error = ''
+       if (this.v$.$errors.length == 0 ) {
+        this.loading = true
+       
+         let DataUser = {
+         contenu: this.contenu,
+         user_id:this.getUser.user.id,
+         sujet_id:this.id
+                 
+       }
+       console.log('datauser', DataUser);
+   
+       try {
+      const response = await axios.post('/commentaire', DataUser);
+  
+      console.log('response.login', response); 
+      if (response.data.statut === "success") {
+        console.log(response.data);
+        this.contenu = ''
+        await this.fetchCommentaireOptions()
+       this.loading = false
+       this.msgsuccesspost = true
+       
+          } else {
+          return this.error = response.data.alert
+          
+          }
+      
+            } catch (error) {
+            return this.error = "L'authentification a échoué"
+            }
+       
+         }else{
+        console.log('pas bon' , this.v$.$errors );
+
+        }
+   },
+
+
    async accepter(id){
     this.loading = true
     console.log('id',id);
@@ -196,7 +313,7 @@ export default {
       if (response.data.statut === "success") {
         console.log(response.data);
         this.loading = false
-        this.msgsuccesspost = true
+        this.msgsrejetepost = true
          
         
           } else {
@@ -220,7 +337,18 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
+.noresul {
+    border: 1px solid var(--vert);
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    border-radius: 6px;
+    font-size: 20px;
+  
+  }
 
 .supp {
   font-size: 15px;
@@ -871,6 +999,7 @@ label {
     /* border: 1px solid red; */
     display: flex;
     justify-content: space-evenly;
+    margin-bottom: 30px;
 
 }
 

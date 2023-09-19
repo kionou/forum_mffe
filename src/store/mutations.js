@@ -12,5 +12,11 @@ export default {
         state.commentaireData = data;
     },
 
+    SET_USERS_DATA(state, data) {
+        state.usersData = data;
+    },
+    SET_ABONNER_DATA(state, data) {
+        state.abonnerData = data;
+    },
 
 }

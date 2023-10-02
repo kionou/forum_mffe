@@ -15,6 +15,7 @@ import Moderatrice from "../views/Public/Moderatrice.vue"
 import ValiderSujet from "../views/Public/ValiderSujet.vue"
 import Accepter from "../views/Public/Accepter.vue"
 import Rejeter from "../views/Public/rejeter.vue"
+import Influente from "../views/Public/ProfilInfluent.vue"
 
 
 
@@ -26,6 +27,11 @@ import Test from "../views/Public/test.vue"
 import Admin from "../views/Admin/Dashboard.vue"
 import AccueilAd from "../views/Admin/Accueil.vue"
 import Utilisateur from "../views/Admin/Utilisateur.vue"
+
+
+// chat
+
+import Chat from '../views/Public/ChatUser.vue'
 
 
 
@@ -53,6 +59,7 @@ const router = createRouter({
         { path: '/moderatrice/sujet/:id', name: ' ValiderSujet', component:  ValiderSujet , props:true},
         { path: '/moderatrice/sujet/accepter', name: ' Accepter', component: Accepter },
         { path: '/moderatrice/sujet/rejeter', name: ' Rejeter', component: Rejeter },
+        { path: '/infos-influente', name: ' Influente', component: Influente },
         { path: '/test', name: ' Test', component:  Test}
 
        
@@ -65,6 +72,17 @@ const router = createRouter({
       children:[
         { path: '', name: 'admin-accueil', component: AccueilAd},
         { path: '/admin/utilisateur', name: 'admin-user', component: Utilisateur},
+
+      ]
+    
+    },
+    {
+      path: '/chat',
+      name: 'Chat',
+      component: Chat,
+      children:[
+        { path: '', name: 'Chat', component: Chat},
+       
 
       ]
     

@@ -8,7 +8,7 @@
 			<h4>{{ user.nom }} {{ user.prenom }}</h4>
 		  </router-link>
 		  <small v-if="user.statut === 'I'">suivi par {{ nbresuivie(user._id) }} personne(s)</small>
-		  <button>Message</button>
+		  <button @click="$router.push({ path: `/chat`})" >Message</button>
 		</div>
 	  </div>
 	</div>

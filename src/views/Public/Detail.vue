@@ -147,6 +147,15 @@
             <div class="supp" @click="close" style="background-color: blue; "> Ok</div>
         </template>
     </MazDialog>
+    <MazDialog v-model="msgsignaler">
+        <p>
+            Votre Avis a été envoyer au moderateur avec success !!
+        </p>
+        <template #footer="{ close }">
+
+            <div class="supp" @click="close" style="background-color: blue; "> Ok</div>
+        </template>
+    </MazDialog>
 </template>
 
 <script>
@@ -177,6 +186,7 @@ export default {
             msgsuccesspost: false,
             commentsForTopic: [],
             isDropdownVisible: false,
+            msgsignaler:false,
             step1: {
                 contenu: '',
             },
@@ -301,9 +311,8 @@ async HamdleSignaler(id){
         this.error = ''
         this.v$.step2.$touch()
         if (this.v$.$errors.length == 0) {
-            this.$refs.reportDropdown.classList.remove('show');
-            // this.loading = true
-
+            this.loading = true
+            this.isDropdownVisible = false
             let DataUser = {
                 contenu: this.step2.contenu,
                 user_id: this.getUser.user.id,
@@ -312,25 +321,25 @@ async HamdleSignaler(id){
             }
             console.log('datauser', DataUser);
 
-            // try {
-            //     const response = await axios.post('/signaler', DataUser);
+            try {
+                const response = await axios.post('/signaler', DataUser);
 
-            //     console.log('response.login', response);
-            //     if (response.data.statut === "success") {
-            //         console.log(response.data);
-            //         this.contenu = ''
-            //         await this.fetchCommentaireOptions()
-            //         this.loading = false
-            //         this.msgsuccesspost = true
+                console.log('response.login', response);
+                if (response.data.statut === "success") {
+                    console.log(response.data);
+                    this.step2.contenu = ''
+                    await this.fetchCommentaireOptions()
+                    this.loading = false
+                    this.msgsignaler = true
 
-            //     } else {
-            //         return this.error = response.data.alert
+                } else {
+                    return this.error = response.data.alert
 
-            //     }
+                }
 
-            // } catch (error) {
-            //     return this.error = "L'authentification a échoué"
-            // }
+            } catch (error) {
+                return this.error = "L'authentification a échoué"
+            }
 
         } else {
             console.log('pas bon', this.v$.$errors);

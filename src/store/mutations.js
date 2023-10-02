@@ -18,5 +18,8 @@ export default {
     SET_ABONNER_DATA(state, data) {
         state.abonnerData = data;
     },
+    SET_MESSAGE_DATA(state, data) {
+        state.messageData = data;
+    },
 
 }

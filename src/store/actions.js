@@ -56,6 +56,16 @@ import axios from '@/lib/axiosConfig.js'
           console.error('Erreur lors de la récupération des abonner :', error);
         }
       },
+      async fetchMessageData({ commit }) {
+        try {
+          const response = await axios.get('/chat');
+          const data = response.data; 
+          console.log('SET_MESSAGE_DATA', data);
+          commit('SET_MESSAGE_DATA', data);
+        } catch (error) {
+          console.error('Erreur lors de la récupération des message :', error);
+        }
+      },
 
 
 }

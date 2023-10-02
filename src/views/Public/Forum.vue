@@ -12,14 +12,14 @@
       <div class="forum-page__sidebar stack px-3">
         <ul class="forum-tags">
           <li>
-            <a href="/forum" class="haut">
+            <span href="/forum" class="haut">
               Tous les sujets
-            </a>
+            </span>
           </li>
           <li v-for="centre in CentreOptions" :key="centre.id">
-            <a href="/forum/bases-91" class="content">
+            <span @click="hamdleAction(centre._id)" class="content">
              {{ centre.nom }}
-            </a>
+            </span>
           </li>
           
 
@@ -32,7 +32,7 @@
         </div>
      
         
-        <div class="cadre" v-else  v-for="sujet in SujetOptions" :key="sujet.id" @click="$router.push({ path: `/forum/${sujet._id}`, })" >
+        <div class="cadre" v-else  v-for="sujet in SujetOptions" :key="sujet.id" @click="$router.push({ path: `/forum/${sujet._id}`})" >
           <div class="cadre_header">
             <div class="image" v-if="sujet.user_id">
               <img :src="sujet.user_id.image" alt="">
@@ -75,6 +75,7 @@ export default {
       CentreOptions:[],
       SujetOptions:[],
       commentsForTopic:[],
+      FilterSujets:[],
       nbreComment:'',
     inscriptionDuration:'',
     loading:true
@@ -84,9 +85,6 @@ export default {
  async mounted() {
   await this.fetchCommentaireOptions()
   await this.fetchCentreOptions()
-
-
-  
 
   },
 
@@ -100,17 +98,13 @@ export default {
 
                 await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
                 this.commentsForTopic = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
-                console.log('options',this.commentsForTopic)
-                
-                
-
-              
+                console.log('options',this.commentsForTopic)   
             } catch (error) {
                 console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
             }
         },
  
-    async fetchCentreOptions() {
+async fetchCentreOptions() {
             try {
 
                 await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
@@ -122,11 +116,19 @@ export default {
 
                 this.CentreOptions = options.data;
                 this.SujetOptions =  option.data.filter(sujet => sujet.statut === "1");
+                this.FilterSujets =  option.data.filter(sujet => sujet.statut === "1");
                 this.loading = false
             } catch (error) {
                 console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
             }
         },
+
+hamdleAction(id){
+
+  this.SujetOptions = this.FilterSujets.filter(sujet =>  sujet.centre_id._id === id);
+  console.log(this.SujetOptions);
+        
+        }
    
   },
  
@@ -442,16 +444,18 @@ ul {
   font-size: .9rem;
 }
 
-.forum-tags a {
+.forum-tags span {
   display: flex;
   align-items: center;
   padding: 5px calc(1 * 8px);
+  color: inherit;
+  transition: color .3s;
+  cursor: pointer;
 }
 
 a {
   text-decoration: none;
-  color: inherit;
-  transition: color .3s;
+ 
 }
 
 .chapters-split>*,

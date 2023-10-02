@@ -5,6 +5,7 @@ export default{
     getCommentaireData: (state) => state.commentaireData,
     getUsersData: (state) => state.usersData,
     getAbonnerData: (state) => state.abonnerData,
+    getMessageData: (state) => state.messageData,
 
 
 }

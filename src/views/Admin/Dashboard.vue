@@ -31,6 +31,7 @@
   
       <div class="sidebar  ">
         <ul class="nav-links">
+
           <li class="active">
             <router-link to="/admin">
               <i class='bx bx-home-alt'></i>
@@ -40,37 +41,58 @@
               <li><router-link to="/admin" class="link_name">Accueil</router-link></li>
             </ul>
           </li>
+
           <li>
+            <router-link to="/admin/utilisateur" >
+              <i class="bi bi-people me-2"></i>
+              <span class="link_name">Utilisateurs</span>
+            </router-link>
+            <ul class="sub-menu blank">
+              <li><router-link class="link_name" to="/admin/utilisateur" >Utilisateurs</router-link></li>
+            </ul>
+          </li>
+
+          <li>
+            <router-link to="/admin/centre" >
+              <i class="bi bi-boxes"></i>
+              <span class="link_name">Centres Intérêts</span>
+            </router-link>
+            <ul class="sub-menu blank">
+              <li><router-link class="link_name" to="/admin/centre" >Centres Intérêts</router-link></li>
+            </ul>
+          </li>
+
+          <li>
+            <router-link to="/admin/sujet" >
+              <i class="bi bi-chat"></i>
+              <span class="link_name">Sujets</span>
+            </router-link>
+            <ul class="sub-menu blank">
+              <li><router-link class="link_name" to="/admin/sujet" >sujets</router-link></li>
+            </ul>
+          </li>
+
+
+
+
+          <!-- <li>
             <div class="iocn-link" @submit=" arrow" >
               <a href="#">
-                <i class='bx bx-cog'></i>
-                <span class="link_name">paramétrage</span>
+                <i class="bi bi-people me-2"></i>
+                <span class="link_name">Utilisateurs</span>
               </a>
               <i class='bx bxs-chevron-down arrow'></i>
             </div>
             <ul class="sub-menu">
-              <li><a class="link_name" href="#">paramétrage</a></li>
-              <li><router-link to="admin/utilisateur">Utilisateurs</router-link></li>
-              <li><a href="#">Enquêteurs</a></li>
-              <li><a href="#">Acteurs</a></li>
-              <li><a href="#">Rôle</a></li>
+              <li><a class="link_name" href="#">Utilisateurs</a></li>
+              <li><router-link to="admin/utilisateur">Influent</router-link></li>
+              <li><router-link to="admin/utilisateur">Lambda</router-link></li>
+              <li><router-link to="admin/utilisateur">Moderateur</router-link></li>
+            
             </ul>
-          </li>
-          <li>
-            <div class="iocn-link" @submit=" arrow" >
-              <a href="#">
-                <i class='bx bxs-cube'></i>
-                <span class="link_name">Services</span>
-              </a>
-              <i class='bx bxs-chevron-down arrow'></i>
-            </div>
-            <ul class="sub-menu">
-              <li><a class="link_name" href="#">Services</a></li>
-              <li><a href="#">Service 1</a></li>
-              <li><a href="#">Service 2</a></li>
-              <li><a href="#">Service 3</a></li>
-            </ul>
-          </li>
+          </li> -->
+
+       
          
           <li>
             <a href="#">

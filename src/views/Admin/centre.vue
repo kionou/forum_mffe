@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-       <p>Utilisateurs</p>
+       <p>Centres d'intérêts</p>
      
        <div class="content">
         <div class="search-box">
@@ -12,7 +12,8 @@
         </div>
        </div>
     </div>
-    <div class="general1" role="tablist">
+    <Centre/>
+    <!-- <div class="general1" role="tablist">
   <div class="info-item d-flex justify-content-center align-items-center nav-link  active " role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-home1" aria-controls="navs-pills-top-home1" aria-selected="true" >
                 <i class="bi bi-people me-2"></i>
                 <div>
@@ -31,8 +32,8 @@
                   <p>Moderateurs</p>
                 </div>
               </div>
-</div>
-<div class="tab-pane fade show active  contenu" id="navs-pills-top-home1" role="tabpanel" >
+</div> -->
+<!-- <div class="tab-pane fade show active  contenu" id="navs-pills-top-home1" role="tabpanel" >
   <Lambda/>
 
 </div>
@@ -46,9 +47,9 @@
 
      <Moderateur/>
 
-      </div>
+      </div> -->
 
-      <MazDialog v-if="isOpen" v-model="isOpen" width="621px" title="Enregistrement"  >
+      <MazDialog v-if="isOpen" v-model="isOpen" width="380px" title="Enregistrement d'un centre d'intérêt"  >
         <div class="containe">
         <form >
             <div class="user_details">
@@ -57,41 +58,9 @@
                     <input type="text" placeholder="Nom" name="nom" v-model="nom">
                     <small v-if="v$.nom.$error">{{ v$.nom.$errors[0].$message }}</small>
                 </div>
-                <div class="input_pox">
-                    <span class="datails">Prenoms</span>
-                    <input type="text" placeholder="Prenoms" name="prenom" v-model="prenom">
-                    <small v-if="v$.prenom.$error">{{ v$.prenom.$errors[0].$message }}</small>  
-
-                </div>
-                <div class="input_pox">
-                    <span class="datails">Adresse Email</span>
-                    <input type="email" placeholder="Adresse Email" name="email" v-model="email">
-                    <small v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</small>  
-
-                </div>
-                <div class="input_pox">
-                    <span class="datails">Numéro Téléphonique</span>
-                    <input type="tel" placeholder="Numéro Téléphonique" name="numero" v-model="numero">
-                    <small v-if="v$.numero.$error">{{ v$.numero.$errors[0].$message }}</small>  
-
-                </div>
-                <div class="input_pox">
-                    <span class="datails">Nom d'utilisateur</span>
-                    <input type="text" placeholder="Nom d'utilisateur" name="pseudo" v-model="pseudo">
-                    <small v-if="v$.pseudo.$error">{{ v$.pseudo.$errors[0].$message }}</small>  
-                </div>
-                <div class="input_pox">
-                    <span class="datails">Role</span>
-                <select class="form-select" aria-label="Default select example" name="genre" v-model="statut">
-              <option disabled selected >Choisissez une option</option>
-              <option value="I">Influente</option>
-              <option value="M">Moderatrice</option>
              
-              </select>
-              <small v-if="v$.statut.$error">{{ v$.statut.$errors[0].$message }}</small>  
-
                 </div>
-            </div>
+            
             <div  class="button">
               <div  @click="submit" class="sign">Register</div>
             <!-- <input  class="sign" @click="submit" value="Register"> -->
@@ -121,16 +90,15 @@
 
 <script>
 import MazDialog from 'maz-ui/components/MazDialog'
-import Influent from '../../components/Admin/user/influente.vue';
-import Moderateur from '../../components/Admin/user/moderatrice.vue';
-import Lambda from '../../components/Admin/user/lambda.vue';
+import Centre from '../../components/Admin/centre/centre.vue';
+
 import useVuelidate from '@vuelidate/core';
 import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
 import axios from '@/lib/axiosConfig.js'
 export default {
     name: 'CpHeader',
     components: {
-    MazDialog, Lambda , Moderateur , Influent
+    MazDialog, Centre 
     
   },
 
@@ -141,11 +109,7 @@ export default {
             v$:useVuelidate(), 
            
         nom: '',
-      prenom: '',
-        email: '',
-        pseudo:'',
-        numero:'',
-      statut: '',
+     
       error:'',
         };
     },
@@ -155,30 +119,7 @@ export default {
       require, 
       lgmin: lgmin(2),
       lgmax: lgmax(20),  
-    },
-    prenom: {
-      require,
-      lgmin: lgmin(2),
-      lgmax: lgmax(20),
-    },
-    email: {
-      require,
-      ValidEmail
-    
-    },
-    pseudo: {
-      require,
-      lgmin: lgmin(3),
-    },
-    numero: {
-      require,
-      ValidNumeri,
-      lgmin: lgmin(10),
-      lgmax: lgmax(10),
-    },
-    statut: {
-      require,
-    },
+    }
    
  
   },
@@ -196,11 +137,7 @@ export default {
         this.loading = true
          let DataUser = {
          nom: this.nom,
-         prenom: this.prenom,
-         email: this.email,
-         pseudo:this.pseudo,
-         numero:this.numero,
-         statut:this.statut
+       
                  
        }
        console.log('eeedata', DataUser);
@@ -448,15 +385,11 @@ cursor: pointer;
     width: 30px;
     background: linear-gradient(123deg, #71b8e7,#9b59b6);
 }
-.containe form .user_details{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
+
 form .user_details .input_pox{
     margin-bottom: 15px;
     margin: 20px 0 12px 0;
-    width: calc(100% / 2 - 20px);
+   
 }
 .user_details .input_pox .datails{
     display: block;

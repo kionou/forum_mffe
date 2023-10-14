@@ -1,4 +1,5 @@
 <template>
+    <Loading v-if="loading" style="z-index: 9999;"></Loading>
     <div class="container">
        <p>Utilisateurs</p>
      
@@ -38,57 +39,59 @@
 </div>
       <div class="tab-pane fade" id="navs-pills-top-profile1" role="tabpanel">
         
-        <Influent/>
+        <Influent :InfluentOptions="InfluentOptions"  @data-updated="handleDataUpdated" />
       </div>
 
       <div class="tab-pane fade" id="navs-pills-top-messages1" role="tabpanel">
         
 
-     <Moderateur/>
+        <Moderateur :ModerateurOptions="ModerateurOptions" @data-updated="handleDataUpdated" />
+
 
       </div>
 
       <MazDialog v-if="isOpen" v-model="isOpen" width="621px" title="Enregistrement"  >
         <div class="containe">
+           <small> {{ error }}</small>
         <form >
             <div class="user_details">
                 <div class="input_pox">
                     <span class="datails">Nom</span>
-                    <input type="text" placeholder="Nom" name="nom" v-model="nom">
-                    <small v-if="v$.nom.$error">{{ v$.nom.$errors[0].$message }}</small>
+                    <input type="text" placeholder="Nom" name="nom" v-model="step1.nom">
+                    <small v-if="v$1.step1.nom.$error">{{ v$1.step1.nom.$errors[0].$message }}</small>
                 </div>
                 <div class="input_pox">
                     <span class="datails">Prenoms</span>
-                    <input type="text" placeholder="Prenoms" name="prenom" v-model="prenom">
-                    <small v-if="v$.prenom.$error">{{ v$.prenom.$errors[0].$message }}</small>  
+                    <input type="text" placeholder="Prenoms" name="prenom" v-model="step1.prenom">
+                    <small v-if="v$1.step1.prenom.$error">{{ v$1.step1.prenom.$errors[0].$message }}</small>  
 
                 </div>
                 <div class="input_pox">
                     <span class="datails">Adresse Email</span>
-                    <input type="email" placeholder="Adresse Email" name="email" v-model="email">
-                    <small v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</small>  
+                    <input type="email" placeholder="Adresse Email" name="email" v-model="step1.email">
+                    <small v-if="v$1.step1.email.$error">{{ v$1.step1.email.$errors[0].$message }}</small>  
 
                 </div>
                 <div class="input_pox">
                     <span class="datails">Numéro Téléphonique</span>
-                    <input type="tel" placeholder="Numéro Téléphonique" name="numero" v-model="numero">
-                    <small v-if="v$.numero.$error">{{ v$.numero.$errors[0].$message }}</small>  
+                    <input type="tel" placeholder="Numéro Téléphonique" name="numero" v-model="step1.numero">
+                    <small v-if="v$1.step1.numero.$error">{{ v$1.step1.numero.$errors[0].$message }}</small>  
 
                 </div>
                 <div class="input_pox">
                     <span class="datails">Nom d'utilisateur</span>
-                    <input type="text" placeholder="Nom d'utilisateur" name="pseudo" v-model="pseudo">
-                    <small v-if="v$.pseudo.$error">{{ v$.pseudo.$errors[0].$message }}</small>  
+                    <input type="text" placeholder="Nom d'utilisateur" name="pseudo" v-model="step1.pseudo">
+                    <small v-if="v$1.step1.pseudo.$error">{{ v$1.step1.pseudo.$errors[0].$message }}</small>  
                 </div>
                 <div class="input_pox">
                     <span class="datails">Role</span>
-                <select class="form-select" aria-label="Default select example" name="genre" v-model="statut">
+                <select class="form-select" aria-label="Default select example" name="genre" v-model="step1.statut">
               <option disabled selected >Choisissez une option</option>
               <option value="I">Influente</option>
               <option value="M">Moderatrice</option>
              
               </select>
-              <small v-if="v$.statut.$error">{{ v$.statut.$errors[0].$message }}</small>  
+              <small v-if="v$1.step1.statut.$error">{{ v$1.step1.statut.$errors[0].$message }}</small>  
 
                 </div>
             </div>
@@ -108,12 +111,12 @@
 <img src="@/assets/image/success.png" alt="">
 </p>
 <p class="text-center mb-3"> 
-  Félicitations ! Votre compte a été créé avec succès. Veuillez vous connecter pour commencer
-   à utiliser notre plateforme. Bienvenue parmi nous !
-  
+  Félicitations ! Vous avez créé le compte avec succès. Veuillez informer 
+  l'utilisateur de vérifier sa boîte de réception pour récupérer ses 
+  informations de connexion.
+    
 </p>
 
-<button class="btn-gradient" @click="redirect">Se connecter</button>
 </div> 
 
 </MazDialog>
@@ -127,35 +130,42 @@ import Moderateur from '../../components/Admin/user/moderatrice.vue';
 import Lambda from '../../components/Admin/user/lambda.vue';
 import useVuelidate from '@vuelidate/core';
 import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
+import Loading from '../../components/other/preloader.vue';
 import axios from '@/lib/axiosConfig.js'
 export default {
     name: 'CpHeader',
     components: {
-    MazDialog, Lambda , Moderateur , Influent
+    MazDialog, Lambda , Moderateur , Influent , Loading
     
   },
 
     data() {
         return {
             isOpen:false,
+            loading:true,
             msgsuccess:false,
-            v$:useVuelidate(), 
+            v$1:useVuelidate(), 
             LambdaOptions:[],
             ModerateurOptions:[], 
             InfluentOptions:[],
-           
-        nom: '',
+            step1:{
+              nom: '',
       prenom: '',
         email: '',
         pseudo:'',
         numero:'',
       statut: '',
+
+            } , 
+       
       error:'',
         };
     },
 
     validations: {
-    nom: {
+      step1:{
+
+        nom: {
       require, 
       lgmin: lgmin(2),
       lgmax: lgmax(20),  
@@ -183,6 +193,8 @@ export default {
     statut: {
       require,
     },
+      },
+  
    
  
   },
@@ -219,42 +231,43 @@ export default {
     },
       async submit() {
         console.log('eeedata', 'DataUser');
-       this.v$.$touch()
+       this.v$1.$touch()
        this.error = ''
-       if (this.v$.$errors.length == 0 ) {
+       if (this.v$1.step1.$errors.length == 0 ) {
         this.loading = true
          let DataUser = {
-         nom: this.nom,
-         prenom: this.prenom,
-         email: this.email,
-         pseudo:this.pseudo,
-         numero:this.numero,
-         statut:this.statut
+         nom: this.step1.nom,
+         prenom: this.step1.prenom,
+         email: this.step1.email,
+         pseudo:this.step1.pseudo,
+         numero:this.step1.numero,
+         statut:this.step1.statut
                  
        }
        console.log('eeedata', DataUser);
-        this.msgsuccess = true
-      //  try {
-      //    const response = await axios.post('/users/sign-in-user', DataUser);
-      //    console.log('response.sousprefecture', response);
-      //    if (response.data.statut === 'success') {
-      //       this.loading = false
-      //       this.msgsuccess = true
-      //    } else {
-      //       this.loading = false
-      //       return this.error = "L'adresse e-mail existe déjà dans notre système. Veuillez vous connecter avec cette adresse."
-      //    }
+        
+       try {
+         const response = await axios.post('/users/sign-in-user', DataUser);
+         console.log('response.sousprefecture', response);
+         if (response.data.statut === 'success') {
+            this.loading = false
+            this.msgsuccess = true
+            this.isOpen = false
+         } else {
+            this.loading = false
+            return this.error = "L'adresse e-mail existe déjà dans notre système. Veuillez vous connecter avec cette adresse."
+         }
          
-      //  } catch (error) {
-      //    console.error('Erreur post:', error);
-      //    console.log("eee",error.response.data.alert);
-      //    this.loading = false
-      //    return this.error = "Ce nom d'utilisateur existe déjà! "
-      //  }
+       } catch (error) {
+         console.error('Erreur post:', error);
+         console.log("eee",error.response.data.alert);
+         this.loading = false
+         return this.error = "Ce nom d'utilisateur existe déjà! "
+       }
 
        
 }else{
- console.log('pas bon' , this.v$.$errors );
+ console.log('pas bonzzzzzzz' , this.v$1.step1.$errors );
 
 }
    },

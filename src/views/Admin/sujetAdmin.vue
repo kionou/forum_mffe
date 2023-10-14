@@ -16,35 +16,35 @@
   <div class="info-item d-flex justify-content-center align-items-center nav-link  active " role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-home1" aria-controls="navs-pills-top-home1" aria-selected="true" >
                 <i class="bi bi-people me-2"></i>
                 <div>
-                  <p>Lambda</p>
+                  <p>Sujet en attente</p>
                 </div>
               </div>
               <div class="info-item d-flex justify-content-center align-items-center nav-link "    role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-profile1" aria-controls="navs-pills-top-profile1" aria-selected="false" >
                 <i class="bi bi-people me-2"></i>
                 <div>
-                  <p>Influents</p>
+                  <p>Sujet publier</p>
                 </div>
               </div>
               <div class="info-item d-flex justify-content-center align-items-center nav-link " role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-messages1" aria-controls="navs-pills-top-messages1" aria-selected="false" >
                 <i class="bi bi-people me-2"></i>
                 <div>
-                  <p>Moderateurs</p>
+                  <p>Sujet rejéter</p>
                 </div>
               </div>
 </div>
 <div class="tab-pane fade show active  contenu" id="navs-pills-top-home1" role="tabpanel" >
-  <Lambda/>
+  <Attente/>
 
 </div>
       <div class="tab-pane fade" id="navs-pills-top-profile1" role="tabpanel">
         
-        <Influent/>
+        <Publier/>
       </div>
 
       <div class="tab-pane fade" id="navs-pills-top-messages1" role="tabpanel">
         
 
-     <Moderateur/>
+     <Rejeter/>
 
       </div>
 
@@ -121,16 +121,16 @@
 
 <script>
 import MazDialog from 'maz-ui/components/MazDialog'
-import Influent from '../../components/Admin/user/influente.vue';
-import Moderateur from '../../components/Admin/user/moderatrice.vue';
-import Lambda from '../../components/Admin/user/lambda.vue';
+import Attente from '../../components/Admin/sujet/attente.vue';
+import Rejeter from '../../components/Admin/sujet/rejeter.vue';
+import Publier from '../../components/Admin/sujet/publier.vue';
 import useVuelidate from '@vuelidate/core';
 import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
 import axios from '@/lib/axiosConfig.js'
 export default {
     name: 'CpHeader',
     components: {
-    MazDialog, Lambda , Moderateur , Influent
+    MazDialog, Attente , Rejeter , Publier
     
   },
 

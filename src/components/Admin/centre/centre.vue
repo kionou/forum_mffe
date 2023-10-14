@@ -1,4 +1,5 @@
 <template>
+        <Loading v-if="loading" style="z-index: 9999;"></Loading>
     <div>
         <div class="contenu d-flex justify-content-center align-items-center flex-wrap  w-100"  >
 
@@ -19,18 +20,18 @@
                         </thead>
                         <tbody>
 
-                            <tr >
-                                <td> {{ getSequentialNumber(1)  }}  </td>
-                                <td> Education </td>
+                            <tr v-for="(item, index) in paginatedItems" :key="item.id" >
+                                <td> {{ getSequentialNumber(index)  }}  </td>
+                                <td> {{ item.nom }} </td>
                                
   
                                 <td >
                                     <div class="sci">
                                         <span style="--i:1" class="update">
-                                            <i class="bi bi-pen" @click="updatedoc('item.id')"></i>
+                                            <i class="bi bi-pen" @click="updatedoc(item._id)"></i>
 
                                         </span>
-                                        <span style="--i:2" @click="hamdledelete('item.id')" class="delete">
+                                        <span style="--i:2" @click="hamdledelete(item._id)" class="delete">
                                             <i class="bi bi-trash"></i>
                                         </span>
 
@@ -117,33 +118,48 @@ import MazDialog from 'maz-ui/components/MazDialog'
 import Pag from '../../other/pagination.vue';
 import axios from '@/lib/axiosConfig.js'
 import useVuelidate from '@vuelidate/core';
+import Loading from  "../../other/preloader.vue"
 import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
 export default {
     name: 'ForumMffeLambda',
     components: {
-    MazDialog, Pag
+    MazDialog, Pag , Loading
     
   },
+  computed: {
+      loggedInUser() {
+        return this.$store.getters["user/loggedInUser"];
+      },
+  
+      totalPages() {
+        // return Math.ceil(this.items.length / this.itemsPerPage);
+        return Math.ceil(this.CentreOptions.length / this.itemsPerPage);
+      },
+      paginatedItems() {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        return this.CentreOptions.slice(startIndex, endIndex);
+      },
+    },
 
     data() {
         return {
             msgsuccess:false,
             isdelete:false,
+            loading:true,
             confirmdelete:false,
+            CentreOptions:[],
             isOpen:false,
             startIndex: 0,
             currentPage: 1,
             itemsPerPage: 10,
+            updateClassId:'',
+            ToDeleteId:'',
             v$:useVuelidate(), 
             
                  
             nom: '',
-            prenom: '',
-            email: '',
-            pseudo:'',
-            numero:'',
-            statut: '',
-            error:'',
+           
             
         };
     },
@@ -153,41 +169,32 @@ export default {
       lgmin: lgmin(2),
       lgmax: lgmax(20),  
     },
-    prenom: {
-      require,
-      lgmin: lgmin(2),
-      lgmax: lgmax(20),
-    },
-    email: {
-      require,
-      ValidEmail
     
-    },
-    pseudo: {
-      require,
-      lgmin: lgmin(3),
-    },
-    numero: {
-      require,
-      ValidNumeri,
-      lgmin: lgmin(10),
-      lgmax: lgmax(10),
-    },
-    statut: {
-      require,
-    },
    
  
   },
 
-    mounted() {
-        
+  async   mounted() {
+     await   this.fetchCentreOptions()  
 
 
         
     },
 
     methods: {
+
+        async fetchCentreOptions() {
+            try {
+
+                await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
+                const options = JSON.parse(JSON.stringify(this.$store.getters['getCentreData']));
+                 console.log('Options centre:', options.data);
+                 this.CentreOptions = options.data
+                this.loading = false
+            } catch (error) {
+                console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
+            }
+        },
         
         getSequentialNumber(index) {
             return this.startIndex + index + 1;
@@ -196,7 +203,7 @@ export default {
         // delete picture
         hamdledelete(itemId) {
             console.log(itemId);
-            // this.ToDeleteId = itemId;
+             this.ToDeleteId = itemId;
             this.isdelete = true
 
         },
@@ -206,17 +213,12 @@ export default {
 
             try {
                 // Faites une requête pour supprimer l'élément avec l'ID itemId
-                const response = await axios.delete(`/users/${this.ToDeleteId}`, {
-                    headers: {
-                        Authorization: `Bearer ${this.loggedInUser.token}`,
-                        'Content-Type': 'multipart/form-data',
-
-                    },
-
+                const response = await axios.delete(`/centre/${this.ToDeleteId}`, {
+                   
                 });
                 console.log('Réponse de suppression:', response);
-                if (response.data.status === 'success') {
-                    await this.fetchgetClassificationAllMpme()
+                if (response.data.statut === 'success') {
+                    await this.fetchCentreOptions() 
                     this.confirmdelete = true
                     this.isdelete = false
                     this.loading = false
@@ -229,40 +231,21 @@ export default {
                 }
             } catch (error) {
                 console.error('Erreur lors de la suppression:', error);
-                console.error('Erreur lors de la mise à jour des données MPME guinee :', error);
-                if (error.response.data === 'Unauthorized' || error.response.data.status === 'error') {
-                    console.log('aut', error.response.data.status === 'error');
-                    await this.$store.dispatch('user/clearLoggedInUser');
-                    this.$router.push('/connexion-mpme');
-
-                } else {
-                    this.formatValidationErrors(error.response.data.errors)
-                    this.loading = false
-                    return false;
-                }
+               
 
             }
         },
 
         updatedoc(id) {
-            // this.updateClassId = id
+             this.updateClassId = id
             this.isOpen = true
             // Trouver le document correspondant dans le tableau userData
-            // const classificationToUpdate = this.GetUpdateClass.find(doc => doc.id === id);
+             const classificationToUpdate = this.CentreOptions.find(doc => doc._id === id);
 
             // // Attribuer les valeurs aux champs d'
-            // this.step2.annee = classificationToUpdate.Annee;
-            // this.step2.CodeCritereChiffreAffaire = classificationToUpdate.CodeCritereChiffreAffaire;
-            // this.step2.CodeCritereCapitalSocial = classificationToUpdate.CodeCritereCapitalSocial;
-            // this.step2.ChiffreAffaireReel = classificationToUpdate.ChiffreAffaireReel;
-            // this.step2.CapitalSocialReel = classificationToUpdate.CapitalSocialReel;
-            // this.step2.comptabilite = classificationToUpdate.TypeComptabilite;
-
-
-            // // Vous pouvez également stocker l'URL du document pour l'affichage
-            // // this.updateImageUrl = classificationToUpdate.LienDocument;
-
-            // console.log('classification à mettre à jour :', classificationToUpdate);
+             this.nom = classificationToUpdate.nom;
+        
+            console.log('classification à mettre à jour :', classificationToUpdate);
 
 
         },
@@ -275,32 +258,30 @@ export default {
         this.loading = true
          let DataUser = {
          nom: this.nom,
-         prenom: this.prenom,
-         email: this.email,
-         pseudo:this.pseudo,
-         numero:this.numero,
-         statut:this.statut
+        
                  
        }
        console.log('eeedata', DataUser);
-        this.msgsuccess = true
-      //  try {
-      //    const response = await axios.post('/users/sign-in-user', DataUser);
-      //    console.log('response.sousprefecture', response);
-      //    if (response.data.statut === 'success') {
-      //       this.loading = false
-      //       this.msgsuccess = true
-      //    } else {
-      //       this.loading = false
-      //       return this.error = "L'adresse e-mail existe déjà dans notre système. Veuillez vous connecter avec cette adresse."
-      //    }
+      
+       try {
+         const response = await axios.put(`/centre/${this.updateClassId}`, DataUser);
+         console.log('response.sousprefecture', response);
+         if (response.data.statut === 'success') {
+            this.fetchCentreOptions() 
+            this.isOpen = false
+            this.loading = false
+            this.msgsuccess = true
+         } else {
+            this.loading = false
+            return this.error = "L'adresse e-mail existe déjà dans notre système. Veuillez vous connecter avec cette adresse."
+         }
          
-      //  } catch (error) {
-      //    console.error('Erreur post:', error);
-      //    console.log("eee",error.response.data.alert);
-      //    this.loading = false
-      //    return this.error = "Ce nom d'utilisateur existe déjà! "
-      //  }
+       } catch (error) {
+         console.error('Erreur post:', error);
+         console.log("eee",error.response.data.alert);
+         this.loading = false
+         return this.error = "Ce nom d'utilisateur existe déjà! "
+       }
 
        
 }else{
@@ -319,7 +300,7 @@ export default {
         updatePaginatedItems() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.filteredPmes.slice(startIndex, endIndex);
+      return this.CentreOptions.slice(startIndex, endIndex);
     },
     },
 };

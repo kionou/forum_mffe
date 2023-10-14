@@ -1,4 +1,5 @@
 <template>
+  <Loading v-if="loading" style="z-index: 9999;"></Loading>
   <div>
     <div class="contenu d-flex justify-content-center align-items-center flex-wrap w-100">
       <div class="two-section">
@@ -146,12 +147,13 @@ import MazDialog from "maz-ui/components/MazDialog";
 import Pag from "../../other/pagination.vue";
 import axios from "@/lib/axiosConfig.js";
 import useVuelidate from "@vuelidate/core";
+import Loading from  "../../other/preloader.vue"
 import { require, lgmin, lgmax, ValidEmail, ValidNumeri } from "@/functions/rules";
 export default {
   name: "ForumMffeLambda",
   props: ["LambdaOptions"],
   components: {
-    MazDialog,
+    MazDialog, Loading ,
     Pag,
   },
   computed: {
@@ -173,12 +175,13 @@ export default {
   data() {
     return {
       msgsuccess: false,
+      loading:false,
       isdelete: false,
       confirmdelete: false,
       isOpen: false,
       startIndex: 0,
       currentPage: 1,
-      itemsPerPage: 1,
+      itemsPerPage: 10,
       v$: useVuelidate(),
       updateUserId: "",
       ToDeleteId:"",
@@ -287,7 +290,7 @@ export default {
       if (this.v$.$errors.length == 0) {
         this.loading = true;
         let DataUser = {
-          nom: this.nom,
+          nom: this.noms,
           prenom: this.prenom,
           email: this.email,
           pseudo: this.pseudo,
@@ -530,6 +533,13 @@ td {
   background-color: #fff;
   color: red;
   border: 1px solid red;
+}
+
+small {
+  color: #f8001b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");

@@ -1,4 +1,5 @@
 <template>
+  <Loading v-if="loading" style="z-index: 9999;"></Loading>
     <div class="container">
        <p>Centres d'intérêts</p>
      
@@ -12,51 +13,16 @@
         </div>
        </div>
     </div>
-    <Centre/>
-    <!-- <div class="general1" role="tablist">
-  <div class="info-item d-flex justify-content-center align-items-center nav-link  active " role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-home1" aria-controls="navs-pills-top-home1" aria-selected="true" >
-                <i class="bi bi-people me-2"></i>
-                <div>
-                  <p>Lambda</p>
-                </div>
-              </div>
-              <div class="info-item d-flex justify-content-center align-items-center nav-link "    role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-profile1" aria-controls="navs-pills-top-profile1" aria-selected="false" >
-                <i class="bi bi-people me-2"></i>
-                <div>
-                  <p>Influents</p>
-                </div>
-              </div>
-              <div class="info-item d-flex justify-content-center align-items-center nav-link " role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-messages1" aria-controls="navs-pills-top-messages1" aria-selected="false" >
-                <i class="bi bi-people me-2"></i>
-                <div>
-                  <p>Moderateurs</p>
-                </div>
-              </div>
-</div> -->
-<!-- <div class="tab-pane fade show active  contenu" id="navs-pills-top-home1" role="tabpanel" >
-  <Lambda/>
-
-</div>
-      <div class="tab-pane fade" id="navs-pills-top-profile1" role="tabpanel">
-        
-        <Influent/>
-      </div>
-
-      <div class="tab-pane fade" id="navs-pills-top-messages1" role="tabpanel">
-        
-
-     <Moderateur/>
-
-      </div> -->
-
+    <Centre   @centre-added="refreshCentres" />
+   
       <MazDialog v-if="isOpen" v-model="isOpen" width="380px" title="Enregistrement d'un centre d'intérêt"  >
         <div class="containe">
         <form >
             <div class="user_details">
                 <div class="input_pox">
                     <span class="datails">Nom</span>
-                    <input type="text" placeholder="Nom" name="nom" v-model="nom">
-                    <small v-if="v$.nom.$error">{{ v$.nom.$errors[0].$message }}</small>
+                    <input type="text" placeholder="Nom" name="nom" v-model="step1.nom">
+                    <small v-if="v$.step1.nom.$error">{{ v$.step1.nom.$errors[0].$message }}</small>
                 </div>
              
                 </div>
@@ -91,14 +57,14 @@
 <script>
 import MazDialog from 'maz-ui/components/MazDialog'
 import Centre from '../../components/Admin/centre/centre.vue';
-
+import Loading from '../../components/other/preloader.vue';
 import useVuelidate from '@vuelidate/core';
 import { require, lgmin, lgmax, ValidEmail , ValidNumeri } from '@/functions/rules';
 import axios from '@/lib/axiosConfig.js'
 export default {
     name: 'CpHeader',
     components: {
-    MazDialog, Centre 
+    MazDialog, Centre  , Loading
     
   },
 
@@ -106,66 +72,94 @@ export default {
         return {
             isOpen:false,
             msgsuccess:false,
+            loading:false,
             v$:useVuelidate(), 
+            step1:{
+              nom: '',
+            },
            
-        nom: '',
+      
      
       error:'',
         };
     },
 
     validations: {
-    nom: {
+      step1:{
+        nom: {
       require, 
       lgmin: lgmin(2),
       lgmax: lgmax(20),  
     }
+
+      },
+   
    
  
   },
 
-    mounted() {
+ mounted() {
+      
         
     },
 
     methods: {
+
+
+      async  refreshCentres(){
+            try {
+
+                await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
+                const options = JSON.parse(JSON.stringify(this.$store.getters['getCentreData']));
+                 console.log('Options centre:', options.data);
+                 this.CentreOptions = options.data
+                this.loading = false
+            } catch (error) {
+                console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
+            }
+        },  
+
       async submit() {
         console.log('eeedata', 'DataUser');
        this.v$.$touch()
        this.error = ''
-       if (this.v$.$errors.length == 0 ) {
+       if (this.v$.step1.$errors.length == 0 ) {
         this.loading = true
          let DataUser = {
-         nom: this.nom,
+         nom: this.step1.nom,
        
                  
        }
        console.log('eeedata', DataUser);
-        this.msgsuccess = true
-      //  try {
-      //    const response = await axios.post('/users/sign-in-user', DataUser);
-      //    console.log('response.sousprefecture', response);
-      //    if (response.data.statut === 'success') {
-      //       this.loading = false
-      //       this.msgsuccess = true
-      //    } else {
-      //       this.loading = false
-      //       return this.error = "L'adresse e-mail existe déjà dans notre système. Veuillez vous connecter avec cette adresse."
-      //    }
+        
+       try {
+         const response = await axios.post('/centre', DataUser);
+         console.log('response.sousprefecture', response);
+         if (response.data.statut === 'success') {
+          await this.refreshCentres()
+            this.loading = false
+            this.msgsuccess = true
+            this.isOpen = false
+         } else {
+            this.loading = false
+            return this.error = "L'adresse e-mail existe déjà dans notre système. Veuillez vous connecter avec cette adresse."
+         }
          
-      //  } catch (error) {
-      //    console.error('Erreur post:', error);
-      //    console.log("eee",error.response.data.alert);
-      //    this.loading = false
-      //    return this.error = "Ce nom d'utilisateur existe déjà! "
-      //  }
+       } catch (error) {
+         console.error('Erreur post:', error);
+         console.log("eee",error.response.data.alert);
+         this.loading = false
+         return this.error = "Ce nom d'utilisateur existe déjà! "
+       }
 
        
 }else{
- console.log('pas bon' , this.v$.$errors );
+ console.log('pas bon' , this.v$.step1.$errors );
 
 }
    },
+
+  
         
     },
 };

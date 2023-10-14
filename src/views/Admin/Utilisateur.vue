@@ -33,7 +33,7 @@
               </div>
 </div>
 <div class="tab-pane fade show active  contenu" id="navs-pills-top-home1" role="tabpanel" >
-  <Lambda/>
+  <Lambda :LambdaOptions="LambdaOptions"   @data-updated="handleDataUpdated" />
 
 </div>
       <div class="tab-pane fade" id="navs-pills-top-profile1" role="tabpanel">
@@ -120,6 +120,7 @@
 </template>
 
 <script>
+
 import MazDialog from 'maz-ui/components/MazDialog'
 import Influent from '../../components/Admin/user/influente.vue';
 import Moderateur from '../../components/Admin/user/moderatrice.vue';
@@ -139,6 +140,9 @@ export default {
             isOpen:false,
             msgsuccess:false,
             v$:useVuelidate(), 
+            LambdaOptions:[],
+            ModerateurOptions:[], 
+            InfluentOptions:[],
            
         nom: '',
       prenom: '',
@@ -183,11 +187,36 @@ export default {
  
   },
 
-    mounted() {
+  async  mounted() {
+      await   this.fetchUsersOptions()
         
     },
-
+   
     methods: {
+      async fetchUsersOptions() {
+      try {
+        await this.$store.dispatch("fetchUserData"); // Action spécifique aux bourses
+        const options = JSON.parse(JSON.stringify(this.$store.getters["getUsersData"]));
+        console.log("Options centre:", options.data);
+        this.LambdaOptions = options.data.filter((user) => user.statut === 'L');
+        this.ModerateurOptions = options.data.filter((user) => user.statut === 'M');
+        this.InfluentOptions = options.data.filter((user) => user.statut === 'I');
+        console.log("Options centre:", this.LambdaOptions);
+      
+
+        
+        this.loading = false;
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des options des getCentreData:",
+          error.message
+        );
+      }
+    },
+  async  handleDataUpdated() {
+   await  this.fetchUsersOptions()
+      // this.LambdaOptions = updatedData;
+    },
       async submit() {
         console.log('eeedata', 'DataUser');
        this.v$.$touch()

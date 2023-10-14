@@ -28,7 +28,7 @@ import Admin from "../views/Admin/Dashboard.vue"
 import AccueilAd from "../views/Admin/Accueil.vue"
 import Utilisateur from "../views/Admin/Utilisateur.vue"
 import Centre from "../views/Admin/centre.vue"
-import Sujet from "../views/Admin/sujet.vue"
+import Message from "../views/Admin/sujetAdmin.vue"
 
 
 
@@ -76,7 +76,7 @@ const router = createRouter({
         { path: '', name: 'admin-accueil', component: AccueilAd},
         { path: 'utilisateur', name: 'admin-user', component: Utilisateur},
         { path: 'centre', name: 'admin-centre', component: Centre},
-        { path: 'Sujet', name: 'admin-sujet', component: Sujet},
+        { path: 'message', name: 'admin-sujet', component: Message},
 
       ]
     

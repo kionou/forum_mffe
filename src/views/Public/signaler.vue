@@ -2,35 +2,43 @@
     <Loading v-if="loading"></Loading>
       <div class="general">
           
-        
+          <div class="page-header">
+              <div class="container">
+                  <!-- <div class="page-header__inner">
+                      <h1 class="display-2">Bienvenue  loggedInUser.prenom  loggedInUser.no </h1>
+                      <p>Votre espace personnel vous permet d’effectuer et de faire le suivi de votre entreprise</p>
+                  </div> -->
+              </div>
+          </div>
   
           <main class="forum-page__main stack"  style="max-width: 1140px; margin: 20px auto; padding: 10px;">
               <h2 style="    font-size: 22px;
-      font-weight: bolder;">sujet(s) Rejété(s)</h2>
-          <div v-if="sujetsAvecStatutNull.length === 0" class="noresul">   
+      font-weight: bolder;"> Commentaire Signalé </h2>
+          <div v-if="commentairesAvecSignalements.length === 0" class="noresul">   
   
             <p>aucun sujet postuler pour l'instant</p>
           </div>
        
           
-          <div class="cadre" v-else  v-for="sujet in sujetsAvecStatutNull" :key="sujet.id" @click="$router.push({ path: `/moderatrice/sujet/${sujet._id}`, })" >
-            <div class="cadre_header">
+          <div class="cadre" v-else  v-for="(commentaireData, commentaireId) in commentairesAvecSignalements" :key="commentaireId" @click="$router.push({ path: `/moderatrice/avis/${commentaireId}`, })" >
+            <div class="cadre_header" >
               <div class="image">
-                <img :src="sujet.user_id.image" alt="">
+                <img :src="commentaireData.commentaire.user_id ? commentaireData.commentaire.user_id.image : ''" alt="">
               </div>
               <div class="nom">
-                <p> {{sujet.user_id.nom }} {{sujet.user_id.prenom}} , <span>il y'a, {{formatRelativeDate(sujet.createdAt) }}</span> </p>
+              
+                <p> {{commentaireData.commentaire.user_id.nom }} {{commentaireData.commentaire.user_id.prenom}} , <span>il y'a, {{formatRelativeDate(commentaireData.commentaire.createdAt) }}</span> </p>
               </div>
             </div>
             <div class="cadre_text">
-              <h2>{{sujet.titre}} </h2>
+              <h2>{{commentaireData.commentaire.sujet_id.titre}} </h2>
             </div>
-            <div class="interet">
-              <p> {{sujet.centre_id.nom}} </p>
-            </div>
-            <div class="icon">
+            <!-- <div class="interet">
+              <p> {{commentaireData.sujet.centre_id.nom}} </p>
+            </div> -->
+            <!-- <div class="icon">
               <i class="bi bi-chat-dots"></i> <span>1</span>
-            </div>
+            </div> -->
           </div>
   
   
@@ -45,8 +53,8 @@
   
   <script>
   import io from 'socket.io-client';
-  import { formatRelativeDate } from '@/lib/dateUtils';
-  import Loading from '../../../components/other/preloader.vue';
+  import { formatRelativeDate } from '../../lib/dateUtils';
+  import Loading from '../../components/other/preloader.vue';
   export default {
       name: 'ForumMffeModeratrice',
       components:{ Loading},
@@ -59,6 +67,7 @@
           sujetsAvecStatutNull:[],
           nbretotal:'',
           loading:true, 
+          commentairesAvecSignalements: {},
               
           };
       },
@@ -76,17 +85,39 @@
           async fetchCentreOptions() {
               try {
   
-                  await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
-                  const options = JSON.parse(JSON.stringify(this.$store.getters['getCentreData']));
-  
-                  await this.$store.dispatch('fetchSujetData'); // Action spécifique aux bourses
-                  const option = JSON.parse(JSON.stringify(this.$store.getters['getSujetData']));
-                   console.log('Options centre:', option.data);
-  
-                  this.CentreOptions = options.data;
-                  this.SujetOptions = option.data
-                  this.sujetsAvecStatutNull = option.data.filter(sujet => sujet.statut === "0");
-                  console.log('Options centre:',  this.sujetsAvecStatutNull);
+                  await this.$store.dispatch('fetchSignalerData'); // Action spécifique aux bourses
+                  const optionss = JSON.parse(JSON.stringify(this.$store.getters['getSignalerData']));
+                   console.log('Options centre:', optionss.data);
+
+                 await this.$store.dispatch('fetchCommentaireData'); // Action spécifique aux bourses
+                const allComments = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
+
+
+const signalements = optionss.data; // Vos signalements
+const commentaires = allComments.data; // Tous les commentaires
+
+signalements.forEach((signalement) => {
+  // Récupérez l'ID du commentaire signalé depuis le signalement
+  const commentaireIdSignale = signalement.commentaire_id._id; // Assurez-vous que c'est le bon nom de champ
+
+  // Recherchez le commentaire correspondant par son ID
+  const commentaireSignale = commentaires.find((commentaire) => commentaire._id === commentaireIdSignale);
+
+  // Si un commentaire correspondant est trouvé, ajoutez-le à l'objet des commentaires signalés
+  if (commentaireSignale) {
+    if (!this.commentairesAvecSignalements[commentaireIdSignale]) {
+      this.commentairesAvecSignalements[commentaireIdSignale] = {
+        commentaire: commentaireSignale,
+        signalements: [],
+      };
+    }
+    this.commentairesAvecSignalements[commentaireIdSignale].signalements.push(signalement);
+  }
+});
+
+// commentairesSignales est maintenant un objet qui contient des listes de commentaires signalés associés à chaque signalement
+console.log('Commentaires signalés :', this.commentairesAvecSignalements);
+
                   this.loading = false
   
                 
@@ -103,7 +134,7 @@
       
   /* border: 1px solid red; */
   width: 100%;
-
+  height: 100vh;
   background-color: var(--blanc);
       }
       .noresul {

@@ -6,5 +6,6 @@ export default{
     usersData:[],
     abonnerData:[],
     messageData:[],
+    signalerData:[],
 
 }

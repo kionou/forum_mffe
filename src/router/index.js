@@ -16,6 +16,8 @@ import ValiderSujet from "../views/Public/ValiderSujet.vue"
 import Accepter from "../views/Public/Accepter.vue"
 import Rejeter from "../views/Public/rejeter.vue"
 import Influente from "../views/Public/ProfilInfluent.vue"
+import Signaler from "../views/Public/signaler.vue"
+import Avis from "../views/Public/avisCommentaire.vue"
 
 
 
@@ -54,15 +56,17 @@ const router = createRouter({
         { path: '/connexion', name: 'Connexion', component: Connexion},
         { path: '/inscription', name: ' Inscription', component:  Inscription},
         { path: '/forum', name: ' Forum', component:  Forum ,  beforeEnter: authGuard,},
-        { path: '/sujet', name: ' Sujet', component:  Sujet},
-        { path: '/liste_influente', name: ' Liste', component:  Liste},
-        { path: '/forum/:id', name: ' Detail', component:  Detail , props:true},
-        { path: '/profil', name: ' Profil', component:  Profil},
-        { path: '/moderatrice', name: ' Moderatrice', component:  Moderatrice},
-        { path: '/moderatrice/sujet/:id', name: ' ValiderSujet', component:  ValiderSujet , props:true},
-        { path: '/moderatrice/sujet/accepter', name: ' Accepter', component: Accepter },
-        { path: '/moderatrice/sujet/rejeter', name: ' Rejeter', component: Rejeter },
-        { path: '/infos-influente', name: ' Influente', component: Influente },
+        { path: '/sujet', name: ' Sujet', component:  Sujet , beforeEnter: authGuard,},
+        { path: '/liste_influente', name: ' Liste', component:  Liste , beforeEnter: authGuard,},
+        { path: '/forum/:id', name: ' Detail', component:  Detail , beforeEnter: authGuard, props:true},
+        { path: '/profil', name: ' Profil', component:  Profil , beforeEnter: authGuard,},
+        { path: '/moderatrice', name: ' Moderatrice', component:  Moderatrice , beforeEnter: authGuard,},
+        { path: '/moderatrice/sujet/:id', name: ' ValiderSujet', component:  ValiderSujet , props:true , beforeEnter: authGuard,},
+        { path: '/moderatrice/avis/:id', name: ' Avis', component:  Avis , props:true , beforeEnter: authGuard,},
+        { path: '/moderatrice/sujet/accepter', name: ' Accepter', component: Accepter , beforeEnter: authGuard,},
+        { path: '/moderatrice/sujet/rejeter', name: ' Rejeter', component: Rejeter , beforeEnter: authGuard,},
+        { path: '/moderatrice/sujet/avis', name: ' Signaler', component: Signaler , beforeEnter: authGuard,},
+        { path: '/infos-influente', name: ' Influente', component: Influente , beforeEnter: authGuard, },
         { path: '/test', name: ' Test', component:  Test}
 
        
@@ -73,10 +77,10 @@ const router = createRouter({
       name: 'Admin',
       component: Admin,
       children:[
-        { path: '', name: 'admin-accueil', component: AccueilAd},
-        { path: 'utilisateur', name: 'admin-user', component: Utilisateur},
-        { path: 'centre', name: 'admin-centre', component: Centre},
-        { path: 'message', name: 'admin-sujet', component: Message},
+        { path: '', name: 'admin-accueil', component: AccueilAd , beforeEnter: authGuard,},
+        { path: 'utilisateur', name: 'admin-user', component: Utilisateur , beforeEnter: authGuard,},
+        { path: 'centre', name: 'admin-centre', component: Centre, beforeEnter: authGuard,},
+        { path: 'message', name: 'admin-sujet', component: Message , beforeEnter: authGuard,},
 
       ]
     

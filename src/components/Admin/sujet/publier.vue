@@ -103,7 +103,6 @@ export default {
    
 /* border: 1px solid red; */
 width: 100%;
-height: 100vh;
 background-color: var(--blanc);
    }
    .noresul {

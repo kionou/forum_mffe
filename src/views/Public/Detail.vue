@@ -55,7 +55,7 @@
                     Aucun commentaire pour le moment !!!
                 </div>
 
-                <div v-else class="forum-message is-reply " v-for="comment in commentsForTopic" :key="comment.id">
+                <div v-else class="forum-message is-reply " v-for="comment in commentsForTopic" :key="comment.id" :data-id="comment._id">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex">
                             <div class="forum-avatar">
@@ -75,13 +75,14 @@
                             </div>
                         </div>
                         <div class="icon1 ">
-                            <div class=" icone" id="dropdownMenuButton1"   @click="toggleDropdown">
+                            <div class=" icone" id="dropdownMenuButton1"   @click="toggleDropdown(comment)">
                                 <i class="bi bi-exclamation-octagon"></i>
                             </div>
-                            <div class=""  v-if="isDropdownVisible">
+                            <div class=""  v-if="comment.isDropdownVisible" >
                                 <form class="forum-report__form stack">
                                     <div class="form-group">
                                         <label for="reason">Raison du signalement</label>
+                                        {{ comment._id }}
                                         <textarea name="reason" id="reason" type="textarea" style="min-height: 200px;"
                                             placeholder="Indiquez en quoi ce sujet ne convient pas"
                                             v-model="step2.contenu"></textarea>
@@ -253,7 +254,12 @@ methods: {
             const allComments = JSON.parse(JSON.stringify(this.$store.getters['getCommentaireData']));
             console.log('optionszzz', allComments)
             if (allComments && allComments.data) {
-                this.commentsForTopic = allComments.data.filter(comment => comment.sujet_id._id === this.id);
+                this.commentsForTopic = allComments.data
+                .filter(comment => comment.sujet_id._id === this.id && comment.statut === true)
+                .map(comment => ({
+                    ...comment,
+                    isDropdownVisible: false,
+                }));
                 console.log('Commentaires pour le sujet', this.commentsForTopic);
             } else {
                 console.log('Aucun commentaire disponible.');
@@ -303,9 +309,9 @@ methods: {
 
         }
     },
-    toggleDropdown() {
-    this.isDropdownVisible = !this.isDropdownVisible;
-  },
+    toggleDropdown(comment) {
+    comment.isDropdownVisible = !comment.isDropdownVisible;
+},
 
 async HamdleSignaler(id){
         this.error = ''
@@ -998,12 +1004,12 @@ label {
 }
 
 .forum-report__form {
-    top: 100%;
+    top: auto;
     position: absolute;
     z-index: 10;
     padding: calc(2 * 8px);
     line-height: 1.4;
-    right: 0;
+    right: 15px;
     width: 300px;
 }
 

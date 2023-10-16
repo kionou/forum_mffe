@@ -9,8 +9,8 @@
     <span class="glyphicon glyphicon-camera"></span>
     <span>Change Image</span>
   </label>
-  <input id="file" type="file" @change="loadFile"/>
-  <img :src="updateImageUrl" id="output" width="200" />
+  <input id="file" type="file" @change="loadFile" accept="image/*" style="display: none"/>
+  <img :src="updateImageUrl " id="output" width="200" />
 </div>
         <div class="profil-header__body">
       <h1 class="h1">Mon compte</h1>
@@ -74,6 +74,7 @@ import Loading from '../../components/other/preloader.vue';
 import { mapGetters } from 'vuex';
 import axios from '@/lib/axiosConfig.js'
 import { formatRelativeDate } from '../../lib/dateUtils';
+import {getImage}  from '@/lib/getImage.js'
 export default {
     name: 'ForumMffeProfil',
     components:{Editer , Commentaire , Abonner , Loading},
@@ -86,6 +87,7 @@ export default {
           updateImageUrl: '',
           data:'',
           inscriptionDuration: '',
+          baseUrl: 'http://localhost:5000',
           dataLoaded: false, 
           loading:true
         };
@@ -97,21 +99,94 @@ export default {
     },
 
     methods: {
+      getImage:getImage,
       formatRelativeDate:formatRelativeDate,
-      loadFile(event){
+   async   loadFile(event){
 
   console.log( event.target.files[0]);
   var image = document.getElementById("output");
   image.src = URL.createObjectURL(event.target.files[0]);
+
+       const formData = new FormData();
+        formData.append('image', event.target.files[0]);
+        console.log('tttt', formData);
+  try {
+         const response = await axios.post(`/users/photo/${ this.getUser.user.id}`, formData ,{
+          headers: {
+            Authorization: `Bearer ${this.getUser.token}`,
+            'Content-Type': 'multipart/form-data',
+           
+          }
+        });;
+         console.log('response.sousprefecture', response);
+         if (response.data.statut === 'success') {
+             this.fetchgetUser()
+            this.loading = false
+         } else {
+            
+         }
+         
+       } catch (error) {
+         console.error('Erreur post:', error);
+         console.log("eee",error);
+         this.loading = false
+       }
         },
 
+
+
+        async editer() {
+       
+       this.v$.step1.$touch()
+       this.error = ''
+       if (this.v$.$errors.length == 0 ) {
+        this.loading = true
+
+        let DataUser = {
+            nom: this.step1.nom ,
+            prenom:this.step1.prenom,
+            email:this.step1.email,
+            pseudo:this.step1.pseudo,
+            numero:this.step1.numero
+        }
+            console.log('user',DataUser , this.data._id );
+            try {
+         const response = await axios.put(`/users/${ this.data._id}`, DataUser ,{
+          headers: {
+            Authorization: `Bearer ${this.getUser.token}`,
+           
+          }
+        });;
+         console.log('response.sousprefecture', response);
+         if (response.data.statut === 'success') {
+             this.msgsuccessupdate = true
+            this.loading = false
+         } else {
+            
+         }
+         
+       } catch (error) {
+         console.error('Erreur post:', error);
+         console.log("eee",error);
+         this.loading = false
+       }
+  
+       }else{
+    
+        console.log('pas bon' , this.v$.$errors );
+    
+    }
+    },
    async fetchgetUser(){
           try {      
         const response = await axios.get(`/users/${ this.getUser.user.email}`);
         console.log('response',response);
         if (response.data.status === "success") {
+          console.log('response.data.data',response.data.data);
           this.data = response.data.data
-          this.updateImageUrl = response.data.data.image
+          // this.updateImageUrl = response.data.data.image
+          this.updateImageUrl = this.baseUrl + '/' + response.data.data.image;
+
           this.dataLoaded = true;
           this.loading = false
 

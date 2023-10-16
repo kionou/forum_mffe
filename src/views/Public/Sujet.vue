@@ -27,9 +27,19 @@
                             <select name="" id="" class="form-control" v-model="centre">
                                 <option value="" selected="true">Choisir un centre d'interet</option>
                                 <option v-for="centre in CentreOptions" :key="centre.id" :value="centre._id">{{ centre.nom }}</option>
+                                <!-- <option value="autre" >Autres</option> -->
+
                             </select>
                             <small v-if="v$.centre.$error">{{ v$.centre.$errors[0].$message }}</small>  
                         </div>
+                        <div class="form-group" style="max-width: 350px; width: 100%; padding: 0 10px;" v-if="centre === '65214cc331598c48a3e4509a'"  >
+                            <label for="forum_topic_form_name" class="required">Autre Centre</label>
+                           <input type="text"  id="forum_topic_form_name" class="form-control" placeholder="Saisir un autre centre d'interet" v-model="autreCentre" />
+                           
+
+                        </div>
+
+
                     </div>
                     
                     
@@ -91,6 +101,7 @@ export default {
             titre:'',
             centre:'',
             contenu:'',
+            autreCentre:'',
             CentreOptions:[],
             error:'',
             v$:useVuelidate(), 
@@ -133,8 +144,12 @@ export default {
                 // const option = JSON.parse(JSON.stringify(this.$store.getters['getSujetData']));
                 // console.log('Options centre:', option.data);
 
-                this.CentreOptions = options.data;
-                // this.SujetOptions = option.data
+                
+                this.CentreOptions = options.data.sort((a, b) => {
+  if (a.nom === "Autres") return 1;
+  if (b.nom === "Autres") return -1;
+  return a.nom.localeCompare(b.nom);
+});
             } catch (error) {
                 console.error('Erreur lors de la récupération des options des getCentreData:', error.message);
             }
@@ -150,7 +165,8 @@ export default {
          titre: this.titre,
          contenu: this.contenu,
          user_id:this.getUser.user.id,
-         centre_id:this.centre
+         centre_id:this.centre,
+         autreCentre:this.autreCentre
                  
        }
        console.log('datauser', DataUser);

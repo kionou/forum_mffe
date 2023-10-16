@@ -21,5 +21,8 @@ export default {
     SET_MESSAGE_DATA(state, data) {
         state.messageData = data;
     },
+    SET_SIGNALER_DATA(state, data) {
+        state.signalerData = data;
+    },
 
 }

@@ -17,6 +17,10 @@
         <li class="nav-item">
           <router-link to="/moderatrice/sujet/rejeter"  class="nav-link">Sujet Rejeter</router-link>
         </li>
+
+        <li class="nav-item">
+          <router-link to="/moderatrice/sujet/avis"  class="nav-link">Avis Commentaire</router-link>
+        </li>
         
       </ul>
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0" v-else>

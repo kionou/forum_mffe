@@ -154,6 +154,7 @@ export default {
 		}
 	  },
     selectUser(user) {
+      console.log('user', user);
    const selectedUserInfo = this.UsersOptions.find(userInfo => userInfo._id === user);
       if (selectedUserInfo) {
         this.selectedUser = selectedUserInfo;

@@ -66,6 +66,16 @@ import axios from '@/lib/axiosConfig.js'
           console.error('Erreur lors de la récupération des message :', error);
         }
       },
+      async fetchSignalerData({ commit }) {
+        try {
+          const response = await axios.get('/signaler');
+          const data = response.data; 
+          console.log('SET_SIGNALER_DATA', data);
+          commit('SET_SIGNALER_DATA', data);
+        } catch (error) {
+          console.error('Erreur lors de la récupération des message :', error);
+        }
+      },
 
 
 }

@@ -14,9 +14,9 @@
                 <i class="bx bx-edit-alt"></i>
                 <a href="#">My profile</a>
               </li>
-              <li>
+              <li @click="logout">
                 <i class="bx bx-log-in-circle"></i>
-                <a href="#" @click="logout">Deconnexion</a>
+                <p>Deconnexion</p>
               </li>
             </ul>
           </div>
@@ -115,18 +115,22 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "CptDashboard",
 
+  computed: {
+    ...mapGetters(["getUser"]),
+  },
   data() {
     return {
       icons: "",
-      UsersOptions:[]
+      UsersOptions: [],
     };
   },
 
-async  mounted() {
-//  await   this.fetchUsersOptions()
+  async mounted() {
+    //  await   this.fetchUsersOptions()
     const icon = document.querySelectorAll(".iocn-link");
     for (let j = 0; j < icon.length; j++) {
       icon[j].parentElement.addEventListener("click", () => {
@@ -141,12 +145,18 @@ async  mounted() {
   },
 
   methods: {
+    ...mapActions({ logoutUser: "logoutUser" }),
+    logout() {
+      console.log("rrrrrrrrrrrrr");
+      this.logoutUser(); // Appeler la méthode de déconnexion lors du clic sur le bouton de déconnexion
+      this.$router.push("/connexion");
+    },
     async fetchUsersOptions() {
       try {
         await this.$store.dispatch("fetchUserData"); // Action spécifique aux bourses
         const options = JSON.parse(JSON.stringify(this.$store.getters["getUsersData"]));
         console.log("Options centre:", options.data);
-        this.UsersOptions = options.data
+        this.UsersOptions = options.data;
         console.log("Influenceurs non abonnés :", this.UsersOptions);
         this.loading = false;
       } catch (error) {
@@ -167,7 +177,6 @@ async  mounted() {
     async arrow() {
       console.log("arrow");
     },
-    logout() {},
   },
 };
 </script>

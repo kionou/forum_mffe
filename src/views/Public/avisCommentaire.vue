@@ -1,9 +1,9 @@
 <template>
   <Loading v-if="loading"></Loading>
-  <div class="" v-if="SujetOne">
+  <div class=""  v-if="signalement.commentaire && signalement.commentaire.sujet_id" >
     <div class="page-header topic-header">
       <div class="general">
-        <h1 class="h2 mb2">{{ SujetOne.titre }}</h1>
+        <h1 class="h2 mb2">{{ signalement.commentaire.sujet_id.titre }}</h1>
         <div class="topic-header__meta">
           <a href="/profil/252637" class="topic-header__author">
             <div
@@ -16,23 +16,20 @@
               "
             >
               <img
-                :src="SujetOne.user_id.image"
+                :src="signalement.commentaire.user_id.image"
                 alt=""
                 style="width: 100%; height: 100%"
               />
             </div>
-            {{ SujetOne.user_id.nom }} {{ SujetOne.user_id.prenom }}
+            {{ signalement.commentaire.user_id.nom }} {{ signalement.commentaire.user_id.prenom }}
           </a>
           <small class="topic-header__date"
             ><time-ago>Il y a {{ formatRelativeDate(SujetOne.createdAt) }} </time-ago>
           </small>
           <div class="topic-header__tags">
             <div class="interet">
-              <p>{{ SujetOne.centre_id.nom }}</p>
-            </div>
-
-            <div class="interet" style="cursor: pointer" @click="openCentre">
-              <p>attribuer un center</p>
+            <!-- <small>Commentaire </small> -->
+              <!-- <p>{{ SujetOne.centre_id.nom }}</p> -->
             </div>
           </div>
         </div>
@@ -40,7 +37,7 @@
     </div>
 
     <div class="stack topic-page py5 px-4 general">
-      <div class="forum-message">
+      <!-- <div class="forum-message">
         <div class="forum-message__body">
           <div class="js-content formatted formatted">
             <p>
@@ -49,32 +46,28 @@
           </div>
           <div class="js-forum-edit"></div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="mb1">
+      <!-- <div class="mb1" v-if="signalement.signalements ">
         <h2 class="h3 mt3 mb1">
-          <forum-count v-if="commentsForTopic.length === 0" style="font-weight: bolder"
+          <forum-count v-if="signalement.signalements.length === 0" style="font-weight: bolder"
             >Aucune réponse</forum-count
           >
           <forum-count v-else style="font-weight: bolder"
-            >{{ commentsForTopic.length }} réponse(s)</forum-count
+            >{{ signalement.signalements.length }} réponse(s)</forum-count
           >
         </h2>
         <hr />
-      </div>
+      </div> -->
 
-      <div class="forum-messages">
-        <div class="noresul" v-if="commentsForTopic.length === 0">
+      <!-- <div class="forum-messages">
+        <div class="noresul" v-if="signalement.signalements.length === 0">
           Aucun commentaire pour le moment !!!
-        </div>
+        </div> -->
 
-        <div
-          v-else
-          class="forum-message is-reply"
-          v-for="comment in commentsForTopic"
-          :key="comment.id"
-        >
-          <div class="d-flex align-items-center justify-content-between">
+        <div class="forum-message is-reply">
+        
+          <!-- <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex">
               <div class="forum-avatar">
                 <img :src="comment.user_id.image" alt="" class="forum-message__avatar" />
@@ -94,44 +87,50 @@
                 </div>
               </div>
             </div>
-            <div class="icon1 dropdown">
-              <div
-                class="icone"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i class="bi bi-exclamation-octagon"></i>
-              </div>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <form class="forum-report__form stack">
-                  <div class="form-group">
-                    <label for="reason">Raison du signalement</label>
-                    <textarea
-                      name="reason"
-                      id="reason"
-                      type="textarea"
-                      required=""
-                      style="min-height: 200px"
-                      placeholder="Indiquez en quoi ce sujet ne convient pas"
-                      autofocus=""
-                    ></textarea>
-                  </div>
-                  <button class="btn btn-primary">Envoyer</button>
-                </form>
-              </div>
-            </div>
-          </div>
+         
+          </div> -->
 
           <div class="forum-message__body">
             <div class="formatted card js-content p2">
-              <p>{{ comment.contenu }}</p>
+              <p>{{ signalement.commentaire.contenu }}</p>
+               <small class="text-center text-danger">Commentaire signalé </small>
             </div>
             <div class="js-forum-edit"></div>
           </div>
-        </div>
 
-        <forum-create-message v-if="SujetOne.statut === '1'">
+          <div class="btns" >
+    <button
+      class="btn btn-primary"
+      style="background-color: rgb(0, 183, 255)"
+      @click="accepter(SujetOne._id)"
+    >
+      Accepter
+    </button>
+    <button
+      class="btn btn-primary"
+      style="background-color: rgba(243, 39, 39, 0.842)"
+      @click="refuter(signalement.commentaire._id)"
+    >
+      supprimer
+    </button>
+  </div>
+
+          <h1 class="text-center" style="font-weight: bolder; text-transform: uppercase;font-size: 24px;">Modif</h1>
+          <div  class="" v-for="comment in signalement.signalements" :key="comment.id" >
+            <div class="forum-message__body">
+            <div class="formatted card js-content p2">
+              <p>{{ comment.contenu }}</p>
+               <!-- <small class="text-center text-danger">Commentaire signalé </small> -->
+            </div>
+            <div class="js-forum-edit"></div>
+          </div>
+          </div>
+         
+        </div>
+        
+ 
+
+        <!-- <forum-create-message v-if="SujetOne.statut === '1'">
           <form>
             <div class="stack">
               <div class="form-group">
@@ -156,11 +155,13 @@
               <button class="btn btn-primary" @click.prevent="submit">Répondre</button>
             </div>
           </form>
-        </forum-create-message>
+        </forum-create-message> -->
+
       </div>
     </div>
-  </div>
-  <div class="btns" v-if="SujetOne.statut === null">
+  <!-- </div> -->
+
+  <!-- <div class="btns" v-if="SujetOne.statut === null">
     <button
       class="btn btn-primary"
       style="background-color: rgb(0, 183, 255)"
@@ -175,7 +176,8 @@
     >
       Rejeter
     </button>
-  </div>
+  </div> -->
+  
   <MazDialog v-model="msgsuccesspost">
     <p>Sujet publié</p>
     <template #footer>
@@ -184,43 +186,10 @@
   </MazDialog>
 
   <MazDialog v-model="msgsrejetepost">
-    <p>Sujet rejeté</p>
+    <p>Commentaire supprimé</p>
     <template #footer>
       <div class="supp" @click="close" style="background-color: blue">Ok</div>
     </template>
-  </MazDialog>
-
-  <MazDialog v-model="attribuer">
-    <form class="grid fit js-preventMultiSubmit" style="--col: 300px">
-        <div
-        class="form-group"
-        style=" width: 100%; padding: 0 10px"
-        
-      >
-        <label for="forum_topic_form_name" >Propostion</label>
-        <input
-          type="text"
-          id="forum_topic_form_name"
-          class="form-control"
-          v-model="autreCentre"  disabled
-        />
-      </div>
-      <div class="form-group" style=" width: 100%; padding: 0 10px">
-        <label for="forum_topic_form_name" class="required">Centre d'interet</label>
-        <select name="" id="" class="form-control" v-model="centre">
-          <option value="" selected="true">Choisir un centre d'interet</option>
-          <option v-for="centre in CentreOptions" :key="centre.id" :value="centre._id">
-            {{ centre.nom }}
-          </option>
-          <!-- <option value="autre" >Autres</option> -->
-        </select>
-   
-      </div>
-      <div class="full text-center">
-         <button  @click.prevent="submit" class="btn-gradient mt-4">Créer le sujet</button>
-        </div>
-    
-    </form>
   </MazDialog>
 </template>
 
@@ -247,15 +216,12 @@ export default {
       loading: true,
       msgsuccesspost: false,
       msgsrejetepost: false,
-      attribuer: false,
       error: "",
       v$: useVuelidate(),
       contenu: "",
       commentsForTopic: [],
-      CentreOptions:[],
-      centre:'',
-      autreCentre:'',
-      champDesactive: false,
+      commentairesAvecSignalements: {},
+      signalement:'',
     };
   },
   validations: {
@@ -268,47 +234,66 @@ export default {
   async mounted() {
     console.log("id", this.id);
     console.log("Informations de l'utilisateur :", this.getUser);
-    await this.fetchOneSujet();
     await this.fetchCommentaireOptions();
   },
 
   methods: {
     formatRelativeDate: formatRelativeDate,
-    async fetchOneSujet() {
-      try {
-        const response = await axios.get(`/sujet/${this.id}`);
-        console.log("response.sousprefecture", response);
-        if (response.data.statut === "success") {
-          this.SujetOne = response.data.data;
-          this.autreCentre = response.data.data.autreCentre
-          this.loading = false;
-        } else {
-        }
-      } catch (error) {
-        console.error("Erreur post:", error);
-      }
-    },
+
     async fetchCommentaireOptions() {
       try {
+        await this.$store.dispatch("fetchSignalerData"); // Action spécifique aux bourses
+        const optionss = JSON.parse(
+          JSON.stringify(this.$store.getters["getSignalerData"])
+        );
+        console.log("Options centre:", optionss.data);
+
         await this.$store.dispatch("fetchCommentaireData"); // Action spécifique aux bourses
         const allComments = JSON.parse(
           JSON.stringify(this.$store.getters["getCommentaireData"])
         );
-        console.log("optionszzz", allComments);
-        if (allComments && allComments.data) {
-          this.commentsForTopic = allComments.data.filter(
-            (comment) => comment.sujet_id._id === this.id && comment.statut === true
+
+        const signalements = optionss.data; // Vos signalements
+        const commentaires = allComments.data; // Tous les commentaires
+
+        signalements.forEach((signalement) => {
+          // Récupérez l'ID du commentaire signalé depuis le signalement
+          const commentaireIdSignale = signalement.commentaire_id._id; // Assurez-vous que c'est le bon nom de champ
+
+          // Recherchez le commentaire correspondant par son ID
+          const commentaireSignale = commentaires.find(
+            (commentaire) => commentaire._id === commentaireIdSignale
           );
-          console.log("Commentaires pour le sujet", this.commentsForTopic);
-        } else {
-          console.log("Aucun commentaire disponible.");
-        }
-        await this.$store.dispatch('fetchCentreData'); // Action spécifique aux bourses
-                const options = JSON.parse(JSON.stringify(this.$store.getters['getCentreData']));
-         this.CentreOptions = options.data
+
+          // Si un commentaire correspondant est trouvé, ajoutez-le à l'objet des commentaires signalés
+          if (commentaireSignale) {
+            if (!this.commentairesAvecSignalements[commentaireIdSignale]) {
+              this.commentairesAvecSignalements[commentaireIdSignale] = {
+                commentaire: commentaireSignale,
+                signalements: [],
+              };
+            }
+            this.commentairesAvecSignalements[commentaireIdSignale].signalements.push(
+              signalement
+            );
+          }
+        });
+        for (const commentaireId in this.commentairesAvecSignalements) {
+          
+    console.log("Commentaire iddd :", commentaireId);
+
+        this.signalement = this.commentairesAvecSignalements[this.id];
+    console.log("Commentaires signaléss :", this.signalement);
+         
+
+    // Faites ce que vous devez faire avec signalement
+  } 
+      
+
+        this.loading = false;
       } catch (error) {
         console.error(
-          "Erreur lors de la récupération des options des commentaire:",
+          "Erreur lors de la récupération des options des getCentreData:",
           error.message
         );
       }
@@ -365,10 +350,10 @@ export default {
       }
     },
     async refuter(id) {
-      this.loading = true;
+      // this.loading = true;
       console.log("id", id);
       try {
-        const response = await axios.put(`/sujet/${this.id}`, { statut: 0 });
+        const response = await axios.put(`/commentaire/${id}`, { statut: false });
         console.log("response.login", response);
         if (response.data.statut === "success") {
           console.log(response.data);
@@ -384,10 +369,6 @@ export default {
     close() {
       this.msgsuccesspost = false;
       this.$router.push("/moderatrice");
-    },
-
-    openCentre() {
-      this.attribuer = true;
     },
   },
 };
@@ -422,7 +403,6 @@ export default {
   justify-content: center;
   margin: 0 5px;
 }
-
 .general {
   width: 100%;
   margin: 0 auto;
@@ -1012,7 +992,6 @@ label {
 .icone:hover {
   transform: scale(1.1);
 }
-
 .forum-report__form {
   top: 100%;
   position: absolute;
@@ -1022,7 +1001,6 @@ label {
   right: 0;
   width: 300px;
 }
-
 .form-group input,
 .form-group select,
 .form-group textarea,

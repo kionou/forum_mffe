@@ -7,6 +7,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import Notifications from '@kyvg/vue3-notification'
 import store from './store'
 
 
@@ -37,6 +38,7 @@ app.component('MazTextarea', MazTextarea)
 
 
 // app.use(store);
+app.use(Notifications)
 app.use(vuetify);
 app.use(store);
 app.use(router)

@@ -6,6 +6,8 @@ export default{
     getUsersData: (state) => state.usersData,
     getAbonnerData: (state) => state.abonnerData,
     getMessageData: (state) => state.messageData,
+    getSignalerData: (state) => state.signalerData,
+    
 
 
 }

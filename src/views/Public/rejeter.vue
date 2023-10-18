@@ -23,7 +23,7 @@
         <div class="cadre" v-else  v-for="sujet in sujetsAvecStatutNull" :key="sujet.id" @click="$router.push({ path: `/moderatrice/sujet/${sujet._id}`, })" >
           <div class="cadre_header">
             <div class="image">
-              <img :src="sujet.user_id.image" alt="">
+              <img :src="baseUrl + '/' + sujet.user_id.image" alt="">
             </div>
             <div class="nom">
               <p> {{sujet.user_id.nom }} {{sujet.user_id.prenom}} , <span>il y'a, {{formatRelativeDate(sujet.createdAt) }}</span> </p>
@@ -66,6 +66,7 @@ export default {
         sujetsAvecStatutNull:[],
         nbretotal:'',
         loading:true, 
+        baseUrl: 'http://localhost:5000',
             
         };
     },

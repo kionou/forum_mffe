@@ -16,7 +16,7 @@
               "
             >
               <img
-                :src="signalement.commentaire.user_id.image"
+                :src="baseUrl + '/' + signalement.commentaire.user_id.image"
                 alt=""
                 style="width: 100%; height: 100%"
               />
@@ -222,6 +222,7 @@ export default {
       commentsForTopic: [],
       commentairesAvecSignalements: {},
       signalement:'',
+      baseUrl: 'http://localhost:5000',
     };
   },
   validations: {

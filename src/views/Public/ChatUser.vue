@@ -20,7 +20,7 @@
         
         <!-- <div class="online-dot"></div> -->
         <img
-          :src="user.image"
+          :src="baseUrl + '/' + user.image"
           alt="Profile"
           class="followerImage"
           style="width:50px; height:50px ; border-radius: 50%;" 
@@ -45,7 +45,7 @@
             <div className="chat-header">
               <div className="follower">
                 
-                  <img :src="selectedUser.image" alt="Profile" style= "width: 50px; height:50px ; border-radius: 50%;" 
+                  <img :src="baseUrl + '/' + selectedUser.image" alt="Profile" style= "width: 50px; height:50px ; border-radius: 50%;" 
                   />
                   <div className="name" style="fontSize: 0.9rem" >
                     <span style="font-weight: 700;" >
@@ -100,6 +100,7 @@ export default {
           UsersOptions:[],
           selectedUser:'',
           selectedUserMessages:[],
+          baseUrl: 'http://localhost:5000',
           userConnectedMessages: [], // Tableau pour les messages du user connecté
           socket : io('http://localhost:5000/api/chat/1',{
                       withCredentials: true

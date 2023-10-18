@@ -7,7 +7,7 @@
                 <div class="topic-header__meta">
                     <a href="/profil/252637" class="topic-header__author forum-message__author">
                         <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: none;">
-                            <img :src="SujetOne.user_id.image" alt="" style="width: 100%; height: 100%;">
+                            <img :src="baseUrl + '/' + SujetOne.user_id.image" alt="" style="width: 100%; height: 100%;">
 
                         </div>
                         {{ SujetOne.user_id.nom }} {{ SujetOne.user_id.prenom }}
@@ -59,7 +59,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex">
                             <div class="forum-avatar">
-                                <img :src="comment.user_id.image" alt="" class="forum-message__avatar">
+                                <img :src="baseUrl + '/' + comment.user_id.image" alt="" class="forum-message__avatar">
                             </div>
                             <div class="forum-message__header">
                                 <a href="/profil/305506" class="forum-message__author">
@@ -188,6 +188,7 @@ export default {
             commentsForTopic: [],
             isDropdownVisible: false,
             msgsignaler:false,
+            baseUrl: 'http://localhost:5000',
             step1: {
                 contenu: '',
             },

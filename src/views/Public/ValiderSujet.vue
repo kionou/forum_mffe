@@ -1,5 +1,5 @@
 <template>
-  <Loading v-if="loading"></Loading>
+  <Loading v-if="loading" style="z-index: 9999;"></Loading>
   <div class="" v-if="SujetOne">
     <div class="page-header topic-header">
       <div class="general">
@@ -16,7 +16,7 @@
               "
             >
               <img
-                :src="SujetOne.user_id.image"
+                :src="baseUrl + '/' + SujetOne.user_id.image"
                 alt=""
                 style="width: 100%; height: 100%"
               />
@@ -31,8 +31,8 @@
               <p>{{ SujetOne.centre_id.nom }}</p>
             </div>
 
-            <div class="interet" style="cursor: pointer" @click="openCentre">
-              <p>attribuer un center</p>
+            <div class="interet" style="cursor: pointer" @click="openCentre" v-if="SujetOne.centre_id.nom === 'Autres' ">
+              <p>attribuer un centre</p>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex">
               <div class="forum-avatar">
-                <img :src="comment.user_id.image" alt="" class="forum-message__avatar" />
+                <img :src=" baseUrl + '/' + comment.user_id.image" alt="" class="forum-message__avatar" />
               </div>
               <div class="forum-message__header">
                 <a href="/profil/305506" class="forum-message__author">
@@ -217,7 +217,7 @@
    
       </div>
       <div class="full text-center">
-         <button  @click.prevent="submit" class="btn-gradient mt-4">Créer le sujet</button>
+         <button  @click.prevent="HamdleCentre" class="btn-gradient mt-4" style="background-color:var(--vert); color:var(--blanc)">Modifier</button>
         </div>
     
     </form>
@@ -256,6 +256,7 @@ export default {
       centre:'',
       autreCentre:'',
       champDesactive: false,
+      baseUrl: 'http://localhost:5000',
     };
   },
   validations: {
@@ -389,6 +390,27 @@ export default {
     openCentre() {
       this.attribuer = true;
     },
+ async  HamdleCentre(){
+    this.loading = true;
+    console.log('centre',this.centre);
+try {
+  const response = await axios.put(`/sujet/${this.id}`, {centre_id:this.centre} );
+
+  console.log("response.login", response);
+  if (response.data.statut === "success") {
+    console.log(response.data);
+    this.fetchOneSujet()
+    this.attribuer = false;
+    this.loading = false;
+    //  this.msgsuccesspost = true;
+  } else {
+    return (this.error = response.data.alert);
+  }
+} catch (error) {
+  return (this.error = "L'authentification a échoué");
+}
+
+    }
   },
 };
 </script>

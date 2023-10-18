@@ -23,7 +23,7 @@
           <div class="cadre" v-else  v-for="(commentaireData, commentaireId) in commentairesAvecSignalements" :key="commentaireId" @click="$router.push({ path: `/moderatrice/avis/${commentaireId}`, })" >
             <div class="cadre_header" >
               <div class="image">
-                <img :src="commentaireData.commentaire.user_id ? commentaireData.commentaire.user_id.image : ''" alt="">
+                <img :src="baseUrl + '/' + commentaireData.commentaire.user_id ? commentaireData.commentaire.user_id.image : ''" alt="">
               </div>
               <div class="nom">
               
@@ -68,6 +68,7 @@
           nbretotal:'',
           loading:true, 
           commentairesAvecSignalements: {},
+          baseUrl: 'http://localhost:5000',
               
           };
       },

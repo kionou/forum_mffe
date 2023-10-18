@@ -7,7 +7,7 @@
       </div>
 
       <div v-else class="card" v-for="user in UsersOptions" :key="user.id">
-        <img :src="user.image" alt="" />
+        <img :src="baseUrl + '/' + user.image" alt="" />
         <!-- <img src="https://randomuser.me/api/portraits/women/68.jpg" alt=""> -->
 
         <router-link to="">
@@ -38,6 +38,7 @@ export default {
       loading: true,
       estAbonne: false,
       nbre: [],
+      baseUrl: 'http://localhost:5000',
     };
   },
 

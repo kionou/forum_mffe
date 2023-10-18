@@ -148,6 +148,7 @@ export default {
             LambdaOptions:[],
             ModerateurOptions:[], 
             InfluentOptions:[],
+            baseUrl: 'http://localhost:5000',
             step1:{
               nom: '',
       prenom: '',

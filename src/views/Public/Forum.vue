@@ -35,7 +35,7 @@
         <div class="cadre" v-else  v-for="sujet in SujetOptions" :key="sujet.id" @click="$router.push({ path: `/forum/${sujet._id}`})" >
           <div class="cadre_header">
             <div class="image" v-if="sujet.user_id">
-              <img :src="sujet.user_id.image" alt="">
+              <img :src="baseUrl + '/' + sujet.user_id.image" alt="">
             </div>
             <div class="nom" v-if="sujet.user_id">
               <p>{{ sujet.user_id.nom }} {{ sujet.user_id.prenom }}, <span>il y'a,{{formatRelativeDate(sujet.createdAt) }}</span> </p>
@@ -78,7 +78,8 @@ export default {
       FilterSujets:[],
       nbreComment:'',
     inscriptionDuration:'',
-    loading:true
+    loading:true ,
+    baseUrl: 'http://localhost:5000',
     };
   },
 
